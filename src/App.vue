@@ -1,8 +1,12 @@
 <script setup lang="ts">
 import HelloWorld from "./components/HelloWorld.vue";
+import Generator from "./components/Generator.vue";
 </script>
 
 <template>
+  <h2>Generator</h2>
+  <Generator />
+
   <div>
     <a href="https://vite.dev" target="_blank">
       <img src="/vite.svg" class="logo" alt="Vite logo" />

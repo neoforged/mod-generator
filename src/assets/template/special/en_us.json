@@ -1,0 +1,5 @@
+{
+  "itemGroup.{{ mod_id }}": "Example Mod Tab",
+  "block.{{ mod_id }}.example_block": "Example Block",
+  "item.{{ mod_id }}.example_item": "Example Item"
+}
