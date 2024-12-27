@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { generateTemplate } from "../generator/";
+import JSZip from "jszip";
+import { saveAs } from "file-saver";
 
 const MC_VERSIONS = ["1.21.4", "1.21.3"];
 
@@ -21,8 +23,17 @@ function generateToJSON() {
   });
 }
 
-function handleClick() {
-  alert(JSON.stringify(generateToJSON));
+function downloadZip() {
+  const zip = new JSZip();
+  for (let [k, v] of Object.entries(generateToJSON())) {
+    zip.file(k, v);
+  }
+  zip.generateAsync({ type: "blob" }).then((blob) => {
+    saveAs(
+      blob,
+      `${computeModId(modName.value)}-template-${minecraftVersion.value}.zip`,
+    );
+  });
 }
 </script>
 
@@ -47,7 +58,7 @@ function handleClick() {
   <p>Selected: {{ minecraftVersion }}</p>
 
   <h3>Generate!</h3>
-  <button @click="handleClick">Generate!</button>
+  <button @click="downloadZip">Generate!</button>
 
   <h3>Result</h3>
   <div v-for="(value, key) in generateToJSON()">
