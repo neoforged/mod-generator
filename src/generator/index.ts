@@ -10,9 +10,7 @@ interface Settings {
 /**
  * Maps a template file name to its contents.
  */
-interface GeneratedTemplate {
-  [file: string]: Uint8Array;
-}
+export type GeneratedTemplate = Record<string, Uint8Array>;
 
 export interface TemplateInputs {
   raw: Record<string, Uint8Array>;
@@ -22,7 +20,10 @@ export interface TemplateInputs {
 /**
  * Main entrypoint of template generation.
  */
-export async function generateTemplate(inputs: TemplateInputs, settings: Settings): Promise<GeneratedTemplate> {
+export async function generateTemplate(
+  inputs: TemplateInputs,
+  settings: Settings,
+): Promise<GeneratedTemplate> {
   const ret: GeneratedTemplate = {};
 
   generateRaw(inputs, ret);
@@ -50,6 +51,7 @@ function iterateGlob(
 function interpolateTemplate(template: string, view: any): string {
   return Mustache.render(template, view, undefined, {
     // No escaping since we're not rendering to HTML.
+    // TODO: double check since there is a TS "unused property escape" warning
     escape: (value: any) => value,
   });
 }
@@ -62,7 +64,11 @@ function generateRaw(inputs: TemplateInputs, ret: GeneratedTemplate) {
   });
 }
 
-function generateInterpolated(inputs: TemplateInputs, settings: Settings, ret: GeneratedTemplate) {
+function generateInterpolated(
+  inputs: TemplateInputs,
+  settings: Settings,
+  ret: GeneratedTemplate,
+) {
   const view = {
     mdg_version: "1.0.23",
     parchment_minecraft_version: "1.21.4",
@@ -100,11 +106,12 @@ function generateSpecial(settings: Settings, ret: GeneratedTemplate) {
     encodeUtf8(interpolateTemplate(en_us_json, view));
 
   const javaFolder = `src/main/java/${settings.packageName.replace(".", "/")}`;
-  ret[`${javaFolder}/Config.java`] = encodeUtf8(interpolateTemplate(Config_java, view));
-  ret[`${javaFolder}/${modClassName}.java`] = encodeUtf8(interpolateTemplate(
-    ModClass_java,
-    view,
-  ));
+  ret[`${javaFolder}/Config.java`] = encodeUtf8(
+    interpolateTemplate(Config_java, view),
+  );
+  ret[`${javaFolder}/${modClassName}.java`] = encodeUtf8(
+    interpolateTemplate(ModClass_java, view),
+  );
 }
 
 function encodeUtf8(content: string): Uint8Array {
