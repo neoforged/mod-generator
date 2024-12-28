@@ -52,11 +52,7 @@ function interpolateTemplate(template: string, view: any): string {
 /* RAW FILES - included as is */
 
 // global syntax taken from https://github.com/vitejs/vite/discussions/12191
-const RAW_FILES = import.meta.glob("@assets/template/raw/**/*", {
-  eager: true,
-  query: "?raw",
-  import: "default",
-});
+const RAW_FILES = globAssets();
 
 function generateRaw(ret: GeneratedTemplate) {
   iterateGlob(RAW_FILES, "raw/", (filePath, contents) => {
@@ -65,14 +61,7 @@ function generateRaw(ret: GeneratedTemplate) {
 }
 
 /* INTERPOLATED FILES - included as is after string replacement */
-const INTERPOLATED_FILES = import.meta.glob(
-  "@assets/template/interpolated/**/*",
-  {
-    eager: true,
-    query: "?raw",
-    import: "default",
-  },
-);
+const INTERPOLATED_FILES = globInterpolated();
 
 function generateInterpolated(settings: Settings, ret: GeneratedTemplate) {
   const view = {
@@ -98,6 +87,7 @@ function generateInterpolated(settings: Settings, ret: GeneratedTemplate) {
 import en_us_json from "../assets/template/special/en_us.json?raw";
 import Config_java from "../assets/template/special/Config.java?raw";
 import ModClass_java from "../assets/template/special/ModClass.java?raw";
+import { globAssets, globInterpolated } from "./io.ts";
 
 function generateSpecial(settings: Settings, ret: GeneratedTemplate) {
   const modClassName = settings.modName.replace(/[^A-Za-z0-9]/g, "");

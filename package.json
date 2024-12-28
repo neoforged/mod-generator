@@ -6,9 +6,13 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc -b && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "build-cli": "esbuild src/cli/cli.ts --bundle --platform=node --loader:.java=text --packages=external --outfile=cli.cjs --sourcemap",
+    "run": "npm run build-cli && node cli.cjs",
+    "test-generate": "npm run run -- generate --mod-name 'Test Mod' --mod-id testmod --minecraft-version 1.21.4 --package-name net.neoforged.testmod"
   },
   "dependencies": {
+    "commander": "^12.1.0",
     "file-saver": "^2.0.5",
     "jszip": "^3.10.1",
     "mustache": "^4.2.0",
@@ -23,6 +27,8 @@
     "prettier": "3.4.2",
     "typescript": "~5.6.2",
     "vite": "^6.0.5",
-    "vue-tsc": "^2.2.0"
+    "vue-tsc": "^2.2.0",
+    "esbuild": "^0.24.2",
+    "ts-node": "^10.9.2"
   }
 }
