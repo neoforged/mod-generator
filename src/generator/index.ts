@@ -52,7 +52,7 @@ function interpolateTemplate(template: string, view: any): string {
 /* RAW FILES - included as is */
 
 // global syntax taken from https://github.com/vitejs/vite/discussions/12191
-const RAW_FILES = globAssets();
+const RAW_FILES = await globAssets();
 
 function generateRaw(ret: GeneratedTemplate) {
   iterateGlob(RAW_FILES, "raw/", (filePath, contents) => {
@@ -61,7 +61,7 @@ function generateRaw(ret: GeneratedTemplate) {
 }
 
 /* INTERPOLATED FILES - included as is after string replacement */
-const INTERPOLATED_FILES = globInterpolated();
+const INTERPOLATED_FILES = await globInterpolated();
 
 function generateInterpolated(settings: Settings, ret: GeneratedTemplate) {
   const view = {
