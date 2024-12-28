@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "build-cli": "node build-cli.js",
     "run": "npm run build-cli && node build/cli.js",
-    "test-generate": "npm run run -- generate --mod-name 'Test Mod' --mod-id testmod --minecraft-version 1.21.4 --package-name net.neoforged.testmod"
+    "test-generate": "npm run run -- generate --mod-name 'Test Mod' --mod-id testmod --minecraft-version 1.21.4 --package-name net.neoforged.testmod --output-folder out"
   },
   "dependencies": {
     "commander": "^12.1.0",

@@ -1,52 +1,35 @@
 import * as esbuild from "esbuild";
-import { glob } from "glob";
-import { readFileSync } from "node:fs";
 import path from "node:path";
+import { readFile } from "node:fs/promises";
 
 /**
- * @type Plugin
+ * @type import("esbuild").Plugin
  */
-export const EsbuildPluginImportGlob = {
-  name: "import-glob",
+const ImportRawPlugin = {
+  name: "raw",
   setup: (build) => {
-    build.onResolve({ filter: /\*/ }, async (args) => {
-      if (args.resolveDir === "") {
-        return; // Ignore unresolvable paths
-      }
-
+    build.onResolve({ filter: /\?raw$/ }, (args) => {
       return {
         path: args.path,
-        namespace: "import-glob",
         pluginData: {
+          isAbsolute: path.isAbsolute(args.path),
           resolveDir: args.resolveDir,
         },
+        namespace: "raw-loader",
       };
     });
-
-    build.onLoad({ filter: /.*/, namespace: "import-glob" }, async (args) => {
-      const files = (
-        await glob(args.path, {
-          cwd: args.pluginData.resolveDir,
-          dotRelative: true,
-          nodir: true,
-        })
-      )
-        .sort()
-        .map((file) => [
-          file.replaceAll("\\", "/"),
-          readFileSync(path.join(args.pluginData.resolveDir, file)).toString(
-            "base64",
-          ),
-        ]);
-      const fileMap = Object.fromEntries(files);
-
-      let importerCode = `
-        const files = ${JSON.stringify(fileMap, null, 2)};
-        export default files;
-      `;
-
-      return { contents: importerCode, resolveDir: args.pluginData.resolveDir };
-    });
+    build.onLoad(
+      { filter: /\?raw$/, namespace: "raw-loader" },
+      async (args) => {
+        const fullPath = args.pluginData.isAbsolute
+          ? args.path
+          : path.join(args.pluginData.resolveDir, args.path);
+        return {
+          contents: await readFile(fullPath.replace(/\?raw$/, "")),
+          loader: "text",
+        };
+      },
+    );
   },
 };
 
@@ -61,5 +44,5 @@ await esbuild.build({
   },
   packages: "external",
   sourcemap: true,
-  plugins: [EsbuildPluginImportGlob],
+  plugins: [ImportRawPlugin],
 });

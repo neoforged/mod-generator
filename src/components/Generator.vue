@@ -3,6 +3,7 @@ import { ref } from "vue";
 import { generateTemplate } from "../generator/";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
+import templateInputs from "../generator/io-vite.ts";
 
 const MC_VERSIONS = ["1.21.4", "1.21.3"];
 
@@ -14,8 +15,8 @@ function computeModId(modName: string): string {
   return modName.toLowerCase().replace(/[^a-z0-9]/g, "");
 }
 
-function generateToJSON() {
-  return generateTemplate({
+async function generateToJSON() {
+  return generateTemplate(templateInputs,{
     modName: modName.value,
     modId: computeModId(modName.value),
     packageName: packageName.value,
@@ -23,9 +24,9 @@ function generateToJSON() {
   });
 }
 
-function downloadZip() {
+async function downloadZip() {
   const zip = new JSZip();
-  for (let [k, v] of Object.entries(generateToJSON())) {
+  for (let [k, v] of Object.entries(await generateToJSON())) {
     zip.file(k, v);
   }
   zip.generateAsync({ type: "blob" }).then((blob) => {
