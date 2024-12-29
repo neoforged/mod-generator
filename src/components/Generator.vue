@@ -4,6 +4,10 @@ import { type GeneratedTemplate, generateTemplate } from "../generator/";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
 import templateInputs from "../generator/io-vite.ts";
+import {
+  fetchMinecraftVersions,
+  fetchVersions,
+} from "../generator/versions.ts";
 
 const mcVersions = ref<string[]>([]);
 
@@ -21,31 +25,7 @@ const modId = computed(() => {
   }
 });
 
-// TODO: remove, this is just for testing
-function sleep(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-async function loadMcVersions(): Promise<string[]> {
-  await sleep(2000); // TODO: remove, this is just for testing
-  const result = await fetch(
-    "https://piston-meta.mojang.com/mc/game/version_manifest_v2.json",
-  );
-  const json = await result.json();
-  const ret: string[] = [];
-  for (const entry of json.versions) {
-    if (entry.type !== "release") {
-      continue;
-    }
-    if (entry.id === "1.20.1") {
-      break; // We don't support 1.20.1 or older releases.
-    }
-    ret.push(entry.id);
-  }
-  return ret;
-}
-
-onMounted(async () => (mcVersions.value = await loadMcVersions()));
+onMounted(async () => (mcVersions.value = await fetchMinecraftVersions()));
 
 function computeModId(modName: string): string {
   return modName.toLowerCase().replace(/[^a-z0-9]/g, "");
@@ -61,12 +41,17 @@ function chooseModIdAutomatically() {
 }
 
 async function generateToJSON() {
-  return generateTemplate(templateInputs, {
+  const settings = {
     modName: modName.value,
     modId: modId.value,
     packageName: packageName.value,
     minecraftVersion: minecraftVersion.value,
-  });
+  };
+  return generateTemplate(
+    templateInputs,
+    settings,
+    await fetchVersions(settings, () => new DOMParser(), mcVersions.value),
+  );
 }
 
 async function downloadZip() {
@@ -86,6 +71,9 @@ async function downloadZip() {
 const generatedFiles = ref<GeneratedTemplate>();
 async function updatePreview() {
   generatedFiles.value = await generateToJSON();
+}
+function decodeText(data: Uint8Array): string {
+  return new TextDecoder().decode(data);
 }
 </script>
 
@@ -126,9 +114,13 @@ async function updatePreview() {
     <button @click="updatePreview">Update Preview</button>
 
     <h3>Result</h3>
-    <div v-for="(_value, key) in generatedFiles">
+    <div v-for="(value, key) in generatedFiles">
       <h5>{{ key }}</h5>
-      <!--      <code style="white-space: pre; text-align: left">{{ value }}</code>-->
+      <code
+        v-if="key.includes('gradle.properties') || key.includes('build.gradle')"
+        style="white-space: pre; text-align: left"
+        >{{ decodeText(value) }}</code
+      >
     </div>
   </div>
   <div v-else>

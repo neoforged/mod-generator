@@ -1,6 +1,7 @@
 import Mustache from "mustache";
+import type { ComputedVersions } from "./versions.ts";
 
-interface Settings {
+export interface Settings {
   modName: string;
   modId: string;
   packageName: string;
@@ -23,11 +24,12 @@ export interface TemplateInputs {
 export async function generateTemplate(
   inputs: TemplateInputs,
   settings: Settings,
+  versions: ComputedVersions,
 ): Promise<GeneratedTemplate> {
   const ret: GeneratedTemplate = {};
 
   generateRaw(inputs, ret);
-  generateInterpolated(inputs, settings, ret);
+  generateInterpolated(inputs, settings, versions, ret);
   generateSpecial(settings, ret);
 
   return ret;
@@ -67,17 +69,18 @@ function generateRaw(inputs: TemplateInputs, ret: GeneratedTemplate) {
 function generateInterpolated(
   inputs: TemplateInputs,
   settings: Settings,
+  versions: ComputedVersions,
   ret: GeneratedTemplate,
 ) {
   const view = {
-    mdg_version: "1.0.23",
-    parchment_minecraft_version: "1.21.4",
-    parchment_mappings_version: "2024.12.22",
+    mdg_version: versions.mdgVersion,
+    parchment_minecraft_version: versions.parchmentMinecraftVersion,
+    parchment_mappings_version: versions.parchmentMappingsVersion,
     minecraft_version: settings.minecraftVersion,
-    minecraft_version_range: "[1.21.4, 1.22)",
-    neo_version: "21.4.38-beta",
-    neo_version_range: "[21.4.0-beta,)",
-    loader_version_range: "[4,)",
+    minecraft_version_range: versions.minecraftVersionRange,
+    neo_version: versions.neoForgeVersion,
+    neo_version_range: versions.neoForgeVersionRange,
+    loader_version_range: versions.loaderVersionRange,
     mod_id: settings.modId,
     mod_name: settings.modName,
     mod_group_id: settings.packageName,

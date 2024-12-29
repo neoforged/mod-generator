@@ -12,6 +12,7 @@
     "test-generate": "npm run run -- generate --mod-name 'Test Mod' --mod-id testmod --minecraft-version 1.21.4 --package-name net.neoforged.testmod --output-folder out"
   },
   "dependencies": {
+    "@xmldom/xmldom": "^0.9.6",
     "commander": "^12.1.0",
     "file-saver": "^2.0.5",
     "glob": "^11.0.0",

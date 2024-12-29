@@ -4,6 +4,8 @@ import loadInputs from "../generator/io-node.ts";
 import { fileURLToPath } from "url";
 import * as fs from "node:fs";
 import * as path from "node:path";
+import { fetchVersions } from "../generator/versions.ts";
+import { DOMParser } from "@xmldom/xmldom";
 
 const program = new Command();
 
@@ -24,12 +26,17 @@ program
       import.meta.resolve("../src/assets/template"),
     );
     const templateInputs = await loadInputs(templatesFolder);
-    const result = await generateTemplate(templateInputs, {
+    const settings = {
       modName,
       modId,
       packageName,
       minecraftVersion,
-    });
+    };
+    const result = await generateTemplate(
+      templateInputs,
+      settings,
+      await fetchVersions(settings, () => new DOMParser()),
+    );
 
     fs.rmSync(outputFolder, { recursive: true, force: true });
     fs.mkdirSync(outputFolder, { recursive: true });
