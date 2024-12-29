@@ -12,7 +12,7 @@ async function readFolder(folder: string): Promise<Record<string, Uint8Array>> {
 
   return Object.fromEntries(
     files.map((file) => {
-      const p = path.join(folder, file).replaceAll("\\", "/");
+      const p = path.join(folder, file).replace(/\\/g, "/");
       return [p, readFileSync(p)];
     }),
   );

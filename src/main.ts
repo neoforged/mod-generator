@@ -1,5 +1,4 @@
 import { createApp } from "vue";
-import "./style.css";
-import App from "./App.vue";
+import Generator from "./components/Generator.vue";
 
-createApp(App).mount("#app");
+createApp(Generator).mount("#mod-generator-app");
