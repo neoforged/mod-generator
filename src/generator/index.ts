@@ -122,7 +122,7 @@ function generateSpecial(
   if (
     compareMinecraftVersions(
       versions.minecraftVersion,
-      parseMinecraftVersion("1.21.3"),
+      parseMinecraftVersion("1.21.2"),
     ) < 0
   ) {
     view.registry_get_value = "get";
