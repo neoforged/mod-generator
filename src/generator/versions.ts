@@ -1,6 +1,35 @@
 import type { Settings } from "./index.ts";
 
+export interface MinecraftVersion {
+  major: number;
+  minor: number;
+  patch: number;
+}
+
+export function parseMinecraftVersion(version: string): MinecraftVersion {
+  const mcSplit = version.split(".");
+  return {
+    major: parseInt(mcSplit[0]),
+    minor: parseInt(mcSplit[1]),
+    patch: mcSplit.length == 3 ? parseInt(mcSplit[2]) : 0,
+  };
+}
+
+export function compareMinecraftVersions(
+  v1: MinecraftVersion,
+  v2: MinecraftVersion,
+): number {
+  if (v1.major !== v2.major) {
+    return v1.major - v2.major;
+  }
+  if (v1.minor !== v2.minor) {
+    return v1.minor - v2.minor;
+  }
+  return v1.patch - v2.patch;
+}
+
 export interface ComputedVersions {
+  minecraftVersion: MinecraftVersion;
   mdgVersion: string;
   parchmentMinecraftVersion: string;
   parchmentMappingsVersion: string;
@@ -18,8 +47,8 @@ export async function fetchVersions(
   xmlParser: () => DOMParser | import("@xmldom/xmldom").DOMParser,
   minecraftVersions?: string[],
 ): Promise<ComputedVersions> {
-  const mcSplit = settings.minecraftVersion.split(".");
-  const neoForgePrefix = `${mcSplit[1]}.${mcSplit.length == 3 ? mcSplit[2] : 0}`;
+  const mcVersion = parseMinecraftVersion(settings.minecraftVersion);
+  const neoForgePrefix = `${mcVersion.minor}.${mcVersion.patch}`;
 
   const versions = await Promise.all([
     fetchLatestMavenVersion("net.neoforged", "moddev-gradle", "1.0"),
@@ -31,6 +60,7 @@ export async function fetchVersions(
     fetchLatestMavenVersion("net.neoforged", "neoforge", neoForgePrefix),
   ]);
   return {
+    minecraftVersion: mcVersion,
     mdgVersion: versions[0],
     parchmentMinecraftVersion: versions[1].parchmentMinecraftVersion,
     parchmentMappingsVersion: versions[1].parchmentMappingsVersion,

@@ -65,7 +65,7 @@ neoForge {
         }
 
         data {
-            clientData()
+            {{ data_run_type }}()
 
             // example of overriding the workingDirectory set in configureEach above, uncomment if you want to use it
             // gameDirectory = project.file('run-data')

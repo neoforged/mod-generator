@@ -30,7 +30,7 @@ export async function generateTemplate(
 
   generateRaw(inputs, ret);
   generateInterpolated(inputs, settings, versions, ret);
-  generateSpecial(settings, ret);
+  generateSpecial(settings, versions, ret);
 
   return ret;
 }
@@ -72,7 +72,7 @@ function generateInterpolated(
   versions: ComputedVersions,
   ret: GeneratedTemplate,
 ) {
-  const view = {
+  const view: Record<string, any> = {
     mdg_version: versions.mdgVersion,
     parchment_minecraft_version: versions.parchmentMinecraftVersion,
     parchment_mappings_version: versions.parchmentMappingsVersion,
@@ -85,6 +85,16 @@ function generateInterpolated(
     mod_name: settings.modName,
     mod_group_id: settings.packageName,
   };
+  if (
+    compareMinecraftVersions(
+      versions.minecraftVersion,
+      parseMinecraftVersion("1.21.4"),
+    ) < 0
+  ) {
+    view.data_run_type = "data";
+  } else {
+    view.data_run_type = "clientData";
+  }
   iterateGlob(inputs.interpolated, "interpolated/", (filePath, contents) => {
     const textContent = new TextDecoder().decode(contents);
     ret[filePath] = encodeUtf8(interpolateTemplate(textContent, view));
@@ -96,14 +106,29 @@ function generateInterpolated(
 import en_us_json from "../assets/template/special/en_us.json?raw";
 import Config_java from "../assets/template/special/Config.java?raw";
 import ModClass_java from "../assets/template/special/ModClass.java?raw";
+import { compareMinecraftVersions, parseMinecraftVersion } from "./versions.ts";
 
-function generateSpecial(settings: Settings, ret: GeneratedTemplate) {
+function generateSpecial(
+  settings: Settings,
+  versions: ComputedVersions,
+  ret: GeneratedTemplate,
+) {
   const modClassName = settings.modName.replace(/[^A-Za-z0-9]/g, "");
-  const view = {
+  const view: Record<string, any> = {
     mod_id: settings.modId,
     package_name: settings.packageName,
     mod_class_name: modClassName,
   };
+  if (
+    compareMinecraftVersions(
+      versions.minecraftVersion,
+      parseMinecraftVersion("1.21.3"),
+    ) < 0
+  ) {
+    view.registry_get_value = "get";
+  } else {
+    view.registry_get_value = "getValue";
+  }
 
   ret[`src/main/resources/assets/${settings.modId}/lang/en_us.json`] =
     encodeUtf8(interpolateTemplate(en_us_json, view));
