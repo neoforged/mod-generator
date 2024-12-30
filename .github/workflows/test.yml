@@ -1,0 +1,19 @@
+name: Test Generated Mods
+
+on: [push, pull_request]
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        minecraft-version: ['1.21.1', '1.21.4']
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+      - name: Generate mod template
+        run: npm run run -- generate --mod-name 'Test Mod' --mod-id testmod --minecraft-version ${{ matrix.minecraft-version }} --package-name net.neoforged.testmod --output-folder out
+      - name: Build with Gradle
+        run: ./gradlew build
