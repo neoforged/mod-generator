@@ -22,4 +22,4 @@ jobs:
       - name: Make Gradle wrapper executable
         run: cd out && chmod +x gradlew
       - name: Build with Gradle
-        run: cd out ./gradlew build
+        run: cd out && ./gradlew build
