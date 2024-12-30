@@ -48,7 +48,7 @@ async function generateToJSON() {
     modId: modId.value,
     packageName: packageName.value,
     minecraftVersion: minecraftVersion.value,
-    useNeoGradle: !useNeoGradle.value,
+    useNeoGradle: useNeoGradle.value,
   };
   return generateTemplate(
     templateInputs,

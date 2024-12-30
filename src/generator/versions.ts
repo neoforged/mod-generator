@@ -103,7 +103,7 @@ async function fetchLatestMavenVersion(
 ): Promise<string> {
   const filterSuffix = filter ? `?filter=${filter}` : "";
   const req = await fetch(
-    `https://maven.neoforged.net/api/maven/latest/version/releases/${group.replace(".", "/")}/${artifact}${filterSuffix}`,
+    `https://maven.neoforged.net/api/maven/latest/version/releases/${group.replace(/\./g, "/")}/${artifact}${filterSuffix}`,
   );
   return (await req.json()).version;
 }
