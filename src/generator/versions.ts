@@ -30,7 +30,7 @@ export function compareMinecraftVersions(
 
 export interface ComputedVersions {
   minecraftVersion: MinecraftVersion;
-  mdgVersion: string;
+  gradlePluginVersion: string;
   parchmentMinecraftVersion: string;
   parchmentMappingsVersion: string;
   minecraftVersionRange: string;
@@ -51,7 +51,9 @@ export async function fetchVersions(
   const neoForgePrefix = `${mcVersion.minor}.${mcVersion.patch}`;
 
   const versions = await Promise.all([
-    fetchLatestMavenVersion("net.neoforged", "moddev-gradle", "1.0"),
+    settings.useNeoGradle
+      ? fetchLatestMavenVersion("net.neoforged.gradle", "userdev", "7.0")
+      : fetchLatestMavenVersion("net.neoforged", "moddev-gradle", "1.0"),
     fetchParchmentVersions(
       settings.minecraftVersion,
       xmlParser,
@@ -61,7 +63,7 @@ export async function fetchVersions(
   ]);
   return {
     minecraftVersion: mcVersion,
-    mdgVersion: versions[0],
+    gradlePluginVersion: versions[0],
     parchmentMinecraftVersion: versions[1].parchmentMinecraftVersion,
     parchmentMappingsVersion: versions[1].parchmentMappingsVersion,
     minecraftVersionRange: `[${settings.minecraftVersion}]`,

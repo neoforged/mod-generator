@@ -6,6 +6,7 @@ export interface Settings {
   modId: string;
   packageName: string;
   minecraftVersion: string;
+  useNeoGradle: boolean;
 }
 
 /**
@@ -50,8 +51,12 @@ function iterateGlob(
   }
 }
 
-function interpolateTemplate(template: string, view: any): string {
-  return Mustache.render(template, view, undefined, {
+function interpolateTemplate(
+  template: string,
+  view: any,
+  partials?: any,
+): string {
+  return Mustache.render(template, view, partials, {
     // No escaping since we're not rendering to HTML.
     // TODO: double check since there is a TS "unused property escape" warning
     escape: (value: any) => value,
@@ -66,6 +71,9 @@ function generateRaw(inputs: TemplateInputs, ret: GeneratedTemplate) {
   });
 }
 
+import mdg_block_gradle from "../assets/template/special/mdg_block.gradle?raw";
+import ng_block_gradle from "../assets/template/special/ng_block.gradle?raw";
+
 function generateInterpolated(
   inputs: TemplateInputs,
   settings: Settings,
@@ -73,7 +81,10 @@ function generateInterpolated(
   ret: GeneratedTemplate,
 ) {
   const view: Record<string, any> = {
-    mdg_version: versions.mdgVersion,
+    gradle_plugin_version: versions.gradlePluginVersion,
+    // Having both is technically redundant, but it reads better in the template.
+    use_mdg: !settings.useNeoGradle,
+    use_ng: settings.useNeoGradle,
     parchment_minecraft_version: versions.parchmentMinecraftVersion,
     parchment_mappings_version: versions.parchmentMappingsVersion,
     minecraft_version: settings.minecraftVersion,
@@ -84,6 +95,10 @@ function generateInterpolated(
     mod_id: settings.modId,
     mod_name: settings.modName,
     mod_group_id: settings.packageName,
+  };
+  const partials: Record<string, any> = {
+    mdg_block_gradle,
+    ng_block_gradle,
   };
   if (
     compareMinecraftVersions(
@@ -97,7 +112,9 @@ function generateInterpolated(
   }
   iterateGlob(inputs.interpolated, "interpolated/", (filePath, contents) => {
     const textContent = new TextDecoder().decode(contents);
-    ret[filePath] = encodeUtf8(interpolateTemplate(textContent, view));
+    ret[filePath] = encodeUtf8(
+      interpolateTemplate(textContent, view, partials),
+    );
   });
   return ret;
 }
@@ -106,6 +123,7 @@ function generateInterpolated(
 import en_us_json from "../assets/template/special/en_us.json?raw";
 import Config_java from "../assets/template/special/Config.java?raw";
 import ModClass_java from "../assets/template/special/ModClass.java?raw";
+import neoforge_mods_toml from "../assets/template/special/neoforge.mods.toml?raw";
 import { compareMinecraftVersions, parseMinecraftVersion } from "./versions.ts";
 
 function generateSpecial(
@@ -139,6 +157,21 @@ function generateSpecial(
   } else {
     view.resource_location_constructor = "ResourceLocation.parse";
   }
+  let modsToml: string;
+  if (
+    compareMinecraftVersions(
+      versions.minecraftVersion,
+      parseMinecraftVersion("1.20.5"),
+    ) < 0
+  ) {
+    modsToml = "mods.toml";
+  } else {
+    modsToml = "neoforge.mods.toml";
+  }
+
+  ret[
+    `src/main/${settings.useNeoGradle ? "resources" : "templates"}/META-INF/${modsToml}`
+  ] = encodeUtf8(neoforge_mods_toml);
 
   ret[`src/main/resources/assets/${settings.modId}/lang/en_us.json`] =
     encodeUtf8(interpolateTemplate(en_us_json, view));

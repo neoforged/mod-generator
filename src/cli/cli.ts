@@ -1,4 +1,4 @@
-import { Command } from "commander";
+import { Command, Option } from "commander";
 import { generateTemplate } from "../generator";
 import loadInputs from "../generator/io-node.ts";
 import { fileURLToPath } from "url";
@@ -18,9 +18,24 @@ program
   .requiredOption("--package-name <string>", "package name")
   .requiredOption("--minecraft-version <string>", "minecraft version")
   .requiredOption("--output-folder <string>", "output folder")
+  .addOption(
+    new Option(
+      "--gradle-plugin <string>",
+      "choose between ModDevGradle and NeoGradle",
+    )
+      .makeOptionMandatory(true)
+      .default("mdg")
+      .choices(["moddevgradle", "mdg", "neogradle", "ng"]),
+  )
   .action(async (options) => {
-    const { modName, modId, packageName, minecraftVersion, outputFolder } =
-      options;
+    const {
+      modName,
+      modId,
+      packageName,
+      minecraftVersion,
+      outputFolder,
+      gradlePlugin,
+    } = options;
 
     const templatesFolder = fileURLToPath(
       import.meta.resolve("../src/assets/template"),
@@ -31,6 +46,7 @@ program
       modId,
       packageName,
       minecraftVersion,
+      useNeoGradle: gradlePlugin === "ng" || gradlePlugin === "neogradle",
     };
     const result = await generateTemplate(
       templateInputs,

@@ -8,6 +8,7 @@ import {
   fetchMinecraftVersions,
   fetchVersions,
 } from "../generator/versions.ts";
+import AdvancedOption from "./AdvancedOption.vue";
 
 const mcVersions = ref<string[]>([]);
 
@@ -16,6 +17,7 @@ const overrideModId = ref(false);
 const userOverridenModId = ref("");
 const packageName = ref("com.example");
 const minecraftVersion = ref("1.21.4");
+const useNeoGradle = ref(false);
 
 const modId = computed(() => {
   if (overrideModId.value) {
@@ -46,6 +48,7 @@ async function generateToJSON() {
     modId: modId.value,
     packageName: packageName.value,
     minecraftVersion: minecraftVersion.value,
+    useNeoGradle: !useNeoGradle.value,
   };
   return generateTemplate(
     templateInputs,
@@ -100,6 +103,18 @@ async function downloadZip() {
         <option v-for="version in mcVersions">{{ version }}</option>
       </select>
     </p>
+
+    <h3>Advanced Options</h3>
+    <AdvancedOption
+      v-model="useNeoGradle"
+      id="useNeoGradle"
+      option-name="Use NeoGradle instead of ModDevGradle."
+    >
+      For the most part, these two plugins are functionally equivalent, but
+      ModDevGradle is aimed for simpler and more streamlined buildscripts and
+      Gradle setups, while NeoGradle supports having multiple NeoForge/Minecraft
+      versions in the same project.
+    </AdvancedOption>
 
     <h3>Download</h3>
     <button @click="downloadZip">Download Template</button>

@@ -9,6 +9,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        gradle-plugin: ['mdg', 'ng']
         minecraft-version: ['1.20.2', '1.20.3', '1.20.4', '1.20.5', '1.20.6', '1.21', '1.21.1', '1.21.2', '1.21.3', '1.21.4']
 
     steps:
@@ -28,7 +29,14 @@ jobs:
       - name: Download npm dependencies
         run: npm install
       - name: Generate mod template
-        run: npm run run -- generate --mod-name 'Test Mod' --mod-id testmod --minecraft-version ${{ matrix.minecraft-version }} --package-name net.neoforged.testmod --output-folder out
+        run: >
+          npm run run -- generate
+          --mod-name 'Test Mod'
+          --mod-id testmod
+          --minecraft-version ${{ matrix.minecraft-version }}
+          --gradle-plugin ${{ matrix.gradle-plugin }}
+          --package-name net.neoforged.testmod
+          --output-folder out
       - name: Make Gradle wrapper executable
         working-directory: ./out
         run: chmod +x gradlew
