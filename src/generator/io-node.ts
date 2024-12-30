@@ -6,6 +6,7 @@ import { readFileSync } from "fs";
 async function readFolder(folder: string): Promise<Record<string, Uint8Array>> {
   console.debug("Reading %o", folder);
   const files = await glob(folder + "/**", {
+    absolute: false,
     cwd: folder,
     nodir: true,
   });
