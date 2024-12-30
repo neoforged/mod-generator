@@ -13,6 +13,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
+      - name: Download npm dependencies
+        run: npm install
       - name: Generate mod template
         run: npm run run -- generate --mod-name 'Test Mod' --mod-id testmod --minecraft-version ${{ matrix.minecraft-version }} --package-name net.neoforged.testmod --output-folder out
       - name: Build with Gradle
