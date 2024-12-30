@@ -129,6 +129,16 @@ function generateSpecial(
   } else {
     view.registry_get_value = "getValue";
   }
+  if (
+    compareMinecraftVersions(
+      versions.minecraftVersion,
+      parseMinecraftVersion("1.21"),
+    ) < 0
+  ) {
+    view.resource_location_constructor = "new ResourceLocation";
+  } else {
+    view.resource_location_constructor = "ResourceLocation.parse";
+  }
 
   ret[`src/main/resources/assets/${settings.modId}/lang/en_us.json`] =
     encodeUtf8(interpolateTemplate(en_us_json, view));

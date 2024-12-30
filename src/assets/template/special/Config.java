@@ -45,7 +45,7 @@ public class Config
 
     private static boolean validateItemName(final Object obj)
     {
-        return obj instanceof String itemName && BuiltInRegistries.ITEM.containsKey(ResourceLocation.parse(itemName));
+        return obj instanceof String itemName && BuiltInRegistries.ITEM.containsKey({{ resource_location_constructor }}(itemName));
     }
 
     @SubscribeEvent
@@ -57,7 +57,7 @@ public class Config
 
         // convert the list of strings into a set of items
         items = ITEM_STRINGS.get().stream()
-                .map(itemName -> BuiltInRegistries.ITEM.{{ registry_get_value }}(ResourceLocation.parse(itemName)))
+                .map(itemName -> BuiltInRegistries.ITEM.{{ registry_get_value }}({{ resource_location_constructor }}(itemName)))
                 .collect(Collectors.toSet());
     }
 }
