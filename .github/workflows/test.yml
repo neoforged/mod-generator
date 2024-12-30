@@ -17,5 +17,9 @@ jobs:
         run: npm install
       - name: Generate mod template
         run: npm run run -- generate --mod-name 'Test Mod' --mod-id testmod --minecraft-version ${{ matrix.minecraft-version }} --package-name net.neoforged.testmod --output-folder out
+      - name: Change directory
+        run: cd out
+      - name: Make Gradle wrapper executable
+        run: chmod +x gradlew
       - name: Build with Gradle
         run: ./gradlew build
