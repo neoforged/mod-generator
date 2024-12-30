@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
-import { type GeneratedTemplate, generateTemplate } from "../generator/";
+import { generateTemplate } from "../generator/";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
 import templateInputs from "../generator/io-vite.ts";
@@ -66,15 +66,6 @@ async function downloadZip() {
     );
   });
 }
-
-// TODO: remove once testing is over
-const generatedFiles = ref<GeneratedTemplate>();
-async function updatePreview() {
-  generatedFiles.value = await generateToJSON();
-}
-function decodeText(data: Uint8Array): string {
-  return new TextDecoder().decode(data);
-}
 </script>
 
 <template>
@@ -87,13 +78,15 @@ function decodeText(data: Uint8Array): string {
     <p>Choose an identifier for your mod. It should be unique for your mod.</p>
     <div v-if="overrideModId">
       <p>
-        <a @click="chooseModIdAutomatically">Infer from mod name.</a>
+        <a @click="chooseModIdAutomatically">
+          Click here to infer from mod name.
+        </a>
       </p>
       <p><input v-model="userOverridenModId" type="text" /></p>
     </div>
     <p v-else>
       Inferred from mod name: <code>{{ modId }} </code>.
-      <a @click="chooseModIdManually">Choose another modid.</a>
+      <a @click="chooseModIdManually">Click here to choose another modid.</a>
     </p>
 
     <h3>Package Name</h3>
@@ -107,21 +100,9 @@ function decodeText(data: Uint8Array): string {
         <option v-for="version in mcVersions">{{ version }}</option>
       </select>
     </p>
-    <p>Selected: {{ minecraftVersion }}</p>
 
-    <h3>Generate!</h3>
-    <button @click="downloadZip">Download!</button>
-    <button @click="updatePreview">Update Preview</button>
-
-    <h3>Result</h3>
-    <div v-for="(value, key) in generatedFiles">
-      <h5>{{ key }}</h5>
-      <code
-        v-if="key.includes('gradle.properties') || key.includes('build.gradle')"
-        style="white-space: pre; text-align: left"
-        >{{ decodeText(value) }}</code
-      >
-    </div>
+    <h3>Download</h3>
+    <button @click="downloadZip">Download Template</button>
   </div>
   <div v-else>
     <p>Loading Minecraft versions...</p>
