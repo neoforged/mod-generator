@@ -31,7 +31,6 @@ export async function generateTemplate(
 
   generateRaw(inputs, ret);
   generateInterpolated(inputs, settings, versions, ret);
-  generateSpecial(settings, versions, ret);
 
   return ret;
 }
@@ -71,8 +70,12 @@ function generateRaw(inputs: TemplateInputs, ret: GeneratedTemplate) {
   });
 }
 
+import en_us_json from "../assets/template/special/en_us.json?raw";
+import Config_java from "../assets/template/special/Config.java?raw";
+import ModClass_java from "../assets/template/special/ModClass.java?raw";
 import mdg_block_gradle from "../assets/template/special/mdg_block.gradle?raw";
 import ng_block_gradle from "../assets/template/special/ng_block.gradle?raw";
+import neoforge_mods_toml from "../assets/template/special/neoforge.mods.toml?raw";
 
 function generateInterpolated(
   inputs: TemplateInputs,
@@ -80,6 +83,7 @@ function generateInterpolated(
   versions: ComputedVersions,
   ret: GeneratedTemplate,
 ) {
+  const modClassName = settings.modName.replace(/[^A-Za-z0-9]/g, "");
   const view: Record<string, any> = {
     gradle_plugin_version: versions.gradlePluginVersion,
     // Having both is technically redundant, but it reads better in the template.
@@ -95,20 +99,21 @@ function generateInterpolated(
     mod_id: settings.modId,
     mod_name: settings.modName,
     mod_group_id: settings.packageName,
+    package_name: settings.packageName,
+    mod_class_name: modClassName,
   };
   const partials: Record<string, any> = {
     mdg_block_gradle,
     ng_block_gradle,
   };
-  if (
-    compareMinecraftVersions(
-      versions.minecraftVersion,
-      parseMinecraftVersion("1.21.4"),
-    ) < 0
-  ) {
-    view.data_run_type = "data";
-  } else {
-    view.data_run_type = "clientData";
+  let seenCurrentMcVersion = false;
+  for (const version of versions.minecraftVersions) {
+    if (version === settings.minecraftVersion) {
+      seenCurrentMcVersion = true;
+    }
+    const templateVersion = version.replace(/\./g, "_");
+    view[`before_${templateVersion}`] = !seenCurrentMcVersion;
+    view[`from_${templateVersion}`] = seenCurrentMcVersion;
   }
   iterateGlob(inputs.interpolated, "interpolated/", (filePath, contents) => {
     const textContent = new TextDecoder().decode(contents);
@@ -116,58 +121,7 @@ function generateInterpolated(
       interpolateTemplate(textContent, view, partials),
     );
   });
-  return ret;
-}
-
-/* SPECIAL FILES - included with more complex processing */
-import en_us_json from "../assets/template/special/en_us.json?raw";
-import Config_java from "../assets/template/special/Config.java?raw";
-import ModClass_java from "../assets/template/special/ModClass.java?raw";
-import neoforge_mods_toml from "../assets/template/special/neoforge.mods.toml?raw";
-import { compareMinecraftVersions, parseMinecraftVersion } from "./versions.ts";
-
-function generateSpecial(
-  settings: Settings,
-  versions: ComputedVersions,
-  ret: GeneratedTemplate,
-) {
-  const modClassName = settings.modName.replace(/[^A-Za-z0-9]/g, "");
-  const view: Record<string, any> = {
-    mod_id: settings.modId,
-    package_name: settings.packageName,
-    mod_class_name: modClassName,
-  };
-  if (
-    compareMinecraftVersions(
-      versions.minecraftVersion,
-      parseMinecraftVersion("1.21.2"),
-    ) < 0
-  ) {
-    view.registry_get_value = "get";
-  } else {
-    view.registry_get_value = "getValue";
-  }
-  if (
-    compareMinecraftVersions(
-      versions.minecraftVersion,
-      parseMinecraftVersion("1.21"),
-    ) < 0
-  ) {
-    view.resource_location_constructor = "new ResourceLocation";
-  } else {
-    view.resource_location_constructor = "ResourceLocation.parse";
-  }
-  let modsToml: string;
-  if (
-    compareMinecraftVersions(
-      versions.minecraftVersion,
-      parseMinecraftVersion("1.20.5"),
-    ) < 0
-  ) {
-    modsToml = "mods.toml";
-  } else {
-    modsToml = "neoforge.mods.toml";
-  }
+  let modsToml = view.before_1_20_5 ? "mods.toml" : "neoforge.mods.toml";
 
   ret[
     `src/main/${settings.useNeoGradle ? "resources" : "templates"}/META-INF/${modsToml}`
@@ -183,6 +137,7 @@ function generateSpecial(
   ret[`${javaFolder}/${modClassName}.java`] = encodeUtf8(
     interpolateTemplate(ModClass_java, view),
   );
+  return ret;
 }
 
 function encodeUtf8(content: string): Uint8Array {

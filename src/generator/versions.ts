@@ -29,6 +29,7 @@ export function compareMinecraftVersions(
 }
 
 export interface ComputedVersions {
+  minecraftVersions: string[];
   minecraftVersion: MinecraftVersion;
   gradlePluginVersion: string;
   parchmentMinecraftVersion: string;
@@ -50,6 +51,9 @@ export async function fetchVersions(
   const mcVersion = parseMinecraftVersion(settings.minecraftVersion);
   const neoForgePrefix = `${mcVersion.minor}.${mcVersion.patch}`;
 
+  if (!minecraftVersions) {
+    minecraftVersions = await fetchMinecraftVersions();
+  }
   const versions = await Promise.all([
     settings.useNeoGradle
       ? fetchLatestMavenVersion("net.neoforged.gradle", "userdev", "7.0")
@@ -62,6 +66,7 @@ export async function fetchVersions(
     fetchLatestMavenVersion("net.neoforged", "neoforge", neoForgePrefix),
   ]);
   return {
+    minecraftVersions,
     minecraftVersion: mcVersion,
     gradlePluginVersion: versions[0],
     parchmentMinecraftVersion: versions[1].parchmentMinecraftVersion,
@@ -111,12 +116,8 @@ async function fetchLatestMavenVersion(
 async function fetchParchmentVersions(
   mcVersion: string,
   xmlParser: () => DOMParser | import("@xmldom/xmldom").DOMParser,
-  minecraftVersions?: string[],
+  minecraftVersions: string[],
 ) {
-  if (!minecraftVersions) {
-    minecraftVersions = await fetchMinecraftVersions();
-  }
-
   let foundMcVersion = false;
   // Scan each MC version, new to old, to find suitable parchment data.
   for (const candidateVersion of minecraftVersions) {

@@ -45,7 +45,12 @@ public class Config
 
     private static boolean validateItemName(final Object obj)
     {
-        return obj instanceof String itemName && BuiltInRegistries.ITEM.containsKey({{ resource_location_constructor }}(itemName));
+{{ #before_1_21 }}
+        return obj instanceof String itemName && BuiltInRegistries.ITEM.containsKey(new ResourceLocation(itemName));
+{{ /before_1_21 }}
+{{ #from_1_21 }}
+        return obj instanceof String itemName && BuiltInRegistries.ITEM.containsKey(ResourceLocation.parse(itemName));
+{{ /from_1_21 }}
     }
 
     @SubscribeEvent
@@ -57,7 +62,17 @@ public class Config
 
         // convert the list of strings into a set of items
         items = ITEM_STRINGS.get().stream()
-                .map(itemName -> BuiltInRegistries.ITEM.{{ registry_get_value }}({{ resource_location_constructor }}(itemName)))
+{{ #before_1_21_2 }}
+    {{ #before_1_21 }}
+                .map(itemName -> BuiltInRegistries.ITEM.get(new ResourceLocation(itemName)))
+    {{ /before_1_21 }}
+    {{ #from_1_21 }}
+                .map(itemName -> BuiltInRegistries.ITEM.get(ResourceLocation.parse(itemName)))
+    {{ /from_1_21 }}
+{{ /before_1_21_2 }}
+{{ #from_1_21_2 }}
+                .map(itemName -> BuiltInRegistries.ITEM.getValue(ResourceLocation.parse(itemName)))
+{{ /from_1_21_2 }}
                 .collect(Collectors.toSet());
     }
 }

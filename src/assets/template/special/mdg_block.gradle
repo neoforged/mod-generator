@@ -35,7 +35,12 @@ neoForge {
         }
 
         data {
-            {{ data_run_type }}()
+{{ #before_1_21_4 }}
+            data()
+{{ /before_1_21_4 }}
+{{ #from_1_21_4 }}
+            clientData()
+{{ /from_1_21_4 }}
 
             // example of overriding the workingDirectory set in configureEach above, uncomment if you want to use it
             // gameDirectory = project.file('run-data')
