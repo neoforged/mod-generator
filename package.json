@@ -13,6 +13,9 @@
     "test-generate-ng": "npm run run -- generate --mod-name 'Test Mod' --mod-id testmod --minecraft-version 1.21.4 --package-name net.neoforged.testmod --gradle-plugin ng --output-folder out"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.7.2",
+    "@fortawesome/free-solid-svg-icons": "^6.7.2",
+    "@fortawesome/vue-fontawesome": "^3.0.8",
     "@xmldom/xmldom": "^0.9.6",
     "commander": "^12.1.0",
     "file-saver": "^2.0.5",

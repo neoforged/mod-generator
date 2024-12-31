@@ -8,7 +8,8 @@ import {
   fetchMinecraftVersions,
   fetchVersions,
 } from "../generator/versions.ts";
-import AdvancedOption from "./AdvancedOption.vue";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { faDownload } from "@fortawesome/free-solid-svg-icons";
 
 const mcVersions = ref<string[]>([]);
 
@@ -17,7 +18,7 @@ const overrideModId = ref(false);
 const userOverridenModId = ref("");
 const packageName = ref("com.example");
 const minecraftVersion = ref("1.21.4");
-const useNeoGradle = ref(false);
+const gradlePlugin = ref("ModDevGradle");
 
 const modId = computed(() => {
   if (overrideModId.value) {
@@ -48,7 +49,7 @@ async function generateToJSON() {
     modId: modId.value,
     packageName: packageName.value,
     minecraftVersion: minecraftVersion.value,
-    useNeoGradle: useNeoGradle.value,
+    useNeoGradle: gradlePlugin.value === "NeoGradle",
   };
   return generateTemplate(
     templateInputs,
@@ -104,20 +105,18 @@ async function downloadZip() {
       </select>
     </p>
 
-    <h3>Advanced Options</h3>
-    <AdvancedOption
-      v-model="useNeoGradle"
-      id="useNeoGradle"
-      option-name="Use NeoGradle instead of ModDevGradle."
-    >
-      For the most part, these two plugins are functionally equivalent, but
-      ModDevGradle is aimed for simpler and more streamlined buildscripts and
-      Gradle setups, while NeoGradle supports having multiple NeoForge/Minecraft
-      versions in the same project.
-    </AdvancedOption>
+    <h3>Gradle Plugin</h3>
+    <p>Choose the Gradle plugin to use for your mod.</p>
+    <p>
+      <select v-model="gradlePlugin">
+        <option>ModDevGradle</option>
+        <option>NeoGradle</option>
+      </select>
+    </p>
 
-    <h3>Download</h3>
-    <button @click="downloadZip">Download Template</button>
+    <button class="download-button" @click="downloadZip">
+      <FontAwesomeIcon :icon="faDownload" /> Download Mod Project
+    </button>
   </div>
   <div v-else>
     <p>Loading Minecraft versions...</p>
