@@ -93,10 +93,10 @@ export async function fetchMinecraftVersions(): Promise<string[]> {
     if (entry.type !== "release") {
       continue;
     }
-    if (entry.id === "1.20.1") {
-      break; // We don't support 1.20.1 or older releases.
-    }
     ret.push(entry.id);
+    if (entry.id === "1.20.4") {
+      break; // We don't support releases older than 1.20.4.
+    }
   }
   return ret;
 }
