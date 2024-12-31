@@ -33,7 +33,6 @@ export default defineConfig({
     copyPublicDir: false,
     lib: {
       entry: path.resolve(__dirname, "src/main.ts"),
-      name: "mod-template-generator",
       formats: ["es"],
     },
   },
