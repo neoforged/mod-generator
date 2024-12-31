@@ -30,8 +30,14 @@ base {
     archivesName = mod_id
 }
 
+{{ #before_1_20_5 }}
+// Mojang ships Java 17 to end users from 1.18 to 1.20.4, so your mod should target Java 17.
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+{{ /before_1_20_5 }}
+{{ #from_1_20_5 }}
 // Mojang ships Java 21 to end users starting in 1.20.5, so mods should target Java 21.
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+{{ /from_1_20_5 }}
 
 {{ #use_mdg }}
 {{ >mdg_block_gradle }}
@@ -122,7 +128,7 @@ neoForge.ideSyncTask generateModMetadata
 {{ /use_mdg }}
 {{ #use_ng }}
 
-    filesMatching(['META-INF/neoforge.mods.toml']) {
+    filesMatching(['META-INF/{{ mods_toml_file }}']) {
         expand replaceProperties
     }
 }

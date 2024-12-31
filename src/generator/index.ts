@@ -115,17 +115,18 @@ function generateInterpolated(
     view[`before_${templateVersion}`] = !seenCurrentMcVersion;
     view[`from_${templateVersion}`] = seenCurrentMcVersion;
   }
+  view.mods_toml_file = view.before_1_20_5 ? "mods.toml" : "neoforge.mods.toml";
+
   iterateGlob(inputs.interpolated, "interpolated/", (filePath, contents) => {
     const textContent = new TextDecoder().decode(contents);
     ret[filePath] = encodeUtf8(
       interpolateTemplate(textContent, view, partials),
     );
   });
-  let modsToml = view.before_1_20_5 ? "mods.toml" : "neoforge.mods.toml";
 
   ret[
-    `src/main/${settings.useNeoGradle ? "resources" : "templates"}/META-INF/${modsToml}`
-  ] = encodeUtf8(neoforge_mods_toml);
+    `src/main/${settings.useNeoGradle ? "resources" : "templates"}/META-INF/${view.mods_toml_file}`
+  ] = encodeUtf8(interpolateTemplate(neoforge_mods_toml, view));
 
   ret[`src/main/resources/assets/${settings.modId}/lang/en_us.json`] =
     encodeUtf8(interpolateTemplate(en_us_json, view));

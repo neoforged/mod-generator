@@ -20,8 +20,13 @@ import net.minecraft.world.level.material.MapColor;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
+{{ #before_1_20_5 }}
+import net.neoforged.fml.ModLoadingContext;
+{{ /before_1_20_5 }}
+{{ #from_1_20_5 }}
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.EventBusSubscriber;
+{{ /from_1_20_5 }}
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
@@ -34,7 +39,7 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
-// The value here should match an entry in the META-INF/neoforge.mods.toml file
+// The value here should match an entry in the META-INF/{{ mods_toml_file }} file
 @Mod({{ mod_class_name }}.MODID)
 public class {{ mod_class_name }}
 {
@@ -56,7 +61,12 @@ public class {{ mod_class_name }}
 
     // Creates a new food item with the id "{{ mod_id }}:example_id", nutrition 1 and saturation 2
     public static final DeferredItem<Item> EXAMPLE_ITEM = ITEMS.registerSimpleItem("example_item", new Item.Properties().food(new FoodProperties.Builder()
+{{ #before_1_20_5 }}
+            .alwaysEat().nutrition(1).saturationMod(2f).build()));
+{{ /before_1_20_5 }}
+{{ #from_1_20_5 }}
             .alwaysEdible().nutrition(1).saturationModifier(2f).build()));
+{{ /from_1_20_5 }}
 
     // Creates a creative tab with the id "{{ mod_id }}:example_tab" for the example item, that is placed after the combat tab
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> EXAMPLE_TAB = CREATIVE_MODE_TABS.register("example_tab", () -> CreativeModeTab.builder()
@@ -69,7 +79,12 @@ public class {{ mod_class_name }}
 
     // The constructor for the mod class is the first code that is run when your mod is loaded.
     // FML will recognize some parameter types like IEventBus or ModContainer and pass them in automatically.
+{{ #before_1_20_5 }}
+    public {{ mod_class_name }}(IEventBus modEventBus)
+{{ /before_1_20_5 }}
+{{ #from_1_20_5 }}
     public {{ mod_class_name }}(IEventBus modEventBus, ModContainer modContainer)
+{{ /from_1_20_5 }}
     {
         // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);
@@ -90,7 +105,12 @@ public class {{ mod_class_name }}
         modEventBus.addListener(this::addCreative);
 
         // Register our mod's ModConfigSpec so that FML can create and load the config file for us
+{{ #before_1_20_5 }}
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
+{{ /before_1_20_5 }}
+{{ #from_1_20_5 }}
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
+{{ /from_1_20_5 }}
     }
 
     private void commonSetup(final FMLCommonSetupEvent event)
@@ -122,7 +142,12 @@ public class {{ mod_class_name }}
     }
 
     // You can use EventBusSubscriber to automatically register all static methods in the class annotated with @SubscribeEvent
+{{ #before_1_20_5 }}
+    @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+{{ /before_1_20_5 }}
+{{ #from_1_20_5 }}
     @EventBusSubscriber(modid = MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+{{ /from_1_20_5 }}
     public static class ClientModEvents
     {
         @SubscribeEvent
