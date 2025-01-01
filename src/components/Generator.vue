@@ -73,12 +73,12 @@ async function downloadZip() {
 </script>
 
 <template>
-  <div v-if="mcVersions.length > 0">
-    <h3 class="thin-margin-bottom">Mod Name</h3>
+  <div class="mod-generator" v-if="mcVersions.length > 0">
+    <h3>Mod Name</h3>
     <p>Choose a name for your mod.</p>
     <p><input v-model="modName" type="text" /></p>
 
-    <h3 class="thin-margin-bottom">Mod Id</h3>
+    <h3>Mod Id</h3>
     <p>Choose an identifier for your mod. It should be unique for your mod.</p>
     <div v-if="overrideModId">
       <p>
@@ -93,11 +93,11 @@ async function downloadZip() {
       <a @click="chooseModIdManually">Click here to choose another modid.</a>
     </p>
 
-    <h3 class="thin-margin-bottom">Package Name</h3>
+    <h3>Package Name</h3>
     <p>Choose a package name for your mod. It should be unique for your mod.</p>
     <p><input v-model="packageName" type="text" /></p>
 
-    <h3 class="thin-margin-bottom">Minecraft Version</h3>
+    <h3>Minecraft Version</h3>
     <p>Choose the Minecraft version for your mod.</p>
     <p>
       <select v-model="minecraftVersion">
@@ -105,7 +105,7 @@ async function downloadZip() {
       </select>
     </p>
 
-    <h3 class="thin-margin-bottom">Gradle Plugin</h3>
+    <h3>Gradle Plugin</h3>
     <p>Choose the Gradle plugin to use for your mod.</p>
     <p>
       <select v-model="gradlePlugin">
@@ -124,7 +124,7 @@ async function downloadZip() {
 </template>
 
 <style>
-.thin-margin-bottom {
+.mod-generator > h3 {
   margin-bottom: 0.25em;
 }
 </style>
