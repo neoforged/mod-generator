@@ -9,6 +9,7 @@ async function readFolder(folder: string): Promise<Record<string, Uint8Array>> {
     absolute: false,
     cwd: folder,
     nodir: true,
+    dot: true,
   });
 
   return Object.fromEntries(

@@ -5,6 +5,7 @@ const RAW_FILES = import.meta.glob("@assets/template/raw/**/*", {
   eager: true,
   query: "?buffer",
   import: "default",
+  exhaustive: true,
 }) as Record<string, Uint8Array>;
 
 /* INTERPOLATED FILES - included as is after string replacement */
@@ -14,6 +15,7 @@ const INTERPOLATED_FILES = import.meta.glob(
     eager: true,
     query: "?buffer",
     import: "default",
+    exhaustive: true,
   },
 ) as Record<string, Uint8Array>;
 
