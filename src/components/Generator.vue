@@ -73,7 +73,7 @@ async function downloadZip() {
 </script>
 
 <template>
-  <div v-if="mcVersions.length > 0">
+  <div class="mod-generator" v-if="mcVersions.length > 0">
     <h3>Mod Name</h3>
     <p>Choose a name for your mod.</p>
     <p><input v-model="modName" type="text" /></p>
@@ -123,4 +123,8 @@ async function downloadZip() {
   </div>
 </template>
 
-<style scoped></style>
+<style>
+.mod-generator > h3 {
+  margin-bottom: 0.25em;
+}
+</style>

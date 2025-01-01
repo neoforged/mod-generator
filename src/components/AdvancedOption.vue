@@ -18,7 +18,7 @@ const props = defineProps<{
   </div>
 </template>
 
-<style scoped>
+<style>
 .advanced-option > .option-name > label {
   padding-left: 5px;
 }
