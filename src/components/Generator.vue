@@ -123,4 +123,8 @@ async function downloadZip() {
   </div>
 </template>
 
-<style scoped></style>
+<style>
+.thin-margin-bottom {
+  margin-bottom: 0.25em;
+}
+</style>
