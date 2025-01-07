@@ -57,7 +57,7 @@ export async function fetchVersions(
   const versions = await Promise.all([
     settings.useNeoGradle
       ? fetchLatestMavenVersion("net.neoforged.gradle", "userdev", "7.0")
-      : fetchLatestMavenVersion("net.neoforged", "moddev-gradle", "1.0"),
+      : fetchLatestMavenVersion("net.neoforged", "moddev-gradle", "2.0"),
     fetchParchmentVersions(
       settings.minecraftVersion,
       xmlParser,
