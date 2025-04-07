@@ -131,7 +131,7 @@ function generateInterpolated(
   ret[`src/main/resources/assets/${settings.modId}/lang/en_us.json`] =
     encodeUtf8(interpolateTemplate(en_us_json, view));
 
-  const javaFolder = `src/main/java/${settings.packageName.replace(".", "/")}`;
+  const javaFolder = `src/main/java/${settings.packageName.replace(/\./g, "/")}`;
   ret[`${javaFolder}/Config.java`] = encodeUtf8(
     interpolateTemplate(Config_java, view),
   );
