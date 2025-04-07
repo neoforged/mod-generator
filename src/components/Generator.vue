@@ -28,6 +28,14 @@ const modId = computed(() => {
   }
 });
 
+const isFormValid = computed(() => {
+  return (
+    isModIdValid(modId.value) &&
+    isModNameValid(modName.value) &&
+    isPackageNameValid(packageName.value)
+  );
+});
+
 onMounted(async () => (mcVersions.value = await fetchMinecraftVersions()));
 
 function computeModId(modName: string): string {
@@ -41,6 +49,27 @@ function chooseModIdManually() {
 
 function chooseModIdAutomatically() {
   overrideModId.value = false;
+}
+
+function isModNameValid(modName: string): boolean {
+  // FML doesn't do any check for the mod name,
+  // however let's ask for at least 3 non-space characters.
+  let nameWithoutSpaces = modName.replace(/\s/g, "");
+  return nameWithoutSpaces.length >= 3;
+}
+
+// Sourced from FML. Should work in JS too?
+const MOD_ID_REGEX = /^(?=.{2,64}$)[a-z][a-z0-9_]*(\.[a-z][a-z0-9_]*)*$/;
+
+function isModIdValid(modId: string): boolean {
+  return MOD_ID_REGEX.test(modId);
+}
+
+// Sourced from https://stackoverflow.com/questions/29783092/regexp-to-match-java-package-name
+const PACKAGE_NAME_REGEX = /^[a-z][a-z0-9_]*(\.[a-z0-9_]+)+[0-9a-z_]$/;
+
+function isPackageNameValid(packageName: string): boolean {
+  return PACKAGE_NAME_REGEX.test(packageName);
 }
 
 async function generateToJSON() {
@@ -114,7 +143,24 @@ async function downloadZip() {
       </select>
     </p>
 
-    <button class="download-button" @click="downloadZip">
+    <h3 v-if="!isFormValid">Invalid input!</h3>
+    <p v-if="!isModNameValid(modName)">
+      Please choose a valid mod name. <code>{{ modName }}</code> is not a valid
+      mod name.
+    </p>
+    <p v-if="!isModIdValid(modId)">
+      Please choose a valid mod identifier. <code>{{ modId }}</code> is not a
+      valid mod identifier.
+    </p>
+    <p v-if="!isPackageNameValid(packageName)">
+      Please choose a valid package name. <code>{{ packageName }}</code> is not
+      a valid package name.
+    </p>
+    <button
+      class="download-button"
+      @click="downloadZip"
+      :disabled="!isFormValid"
+    >
       <FontAwesomeIcon :icon="faDownload" /> Download Mod Project
     </button>
   </div>
