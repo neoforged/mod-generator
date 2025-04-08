@@ -16,7 +16,7 @@ const mcVersions = ref<string[]>([]);
 const modName = ref("Example Mod");
 const overrideModId = ref(false);
 const userOverridenModId = ref("");
-const packageName = ref("com.example");
+const packageName = ref("com.example.examplemod");
 const minecraftVersion = ref("1.21.4");
 const gradlePlugin = ref("ModDevGradle");
 
