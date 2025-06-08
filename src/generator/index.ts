@@ -73,6 +73,7 @@ function generateRaw(inputs: TemplateInputs, ret: GeneratedTemplate) {
 import en_us_json from "../assets/template/special/en_us.json?raw";
 import Config_java from "../assets/template/special/Config.java?raw";
 import ModClass_java from "../assets/template/special/ModClass.java?raw";
+import ModClassClient_java from "../assets/template/special/ModClassClient.java?raw";
 import mdg_block_gradle from "../assets/template/special/mdg_block.gradle?raw";
 import ng_block_gradle from "../assets/template/special/ng_block.gradle?raw";
 import neoforge_mods_toml from "../assets/template/special/neoforge.mods.toml?raw";
@@ -114,6 +115,7 @@ function generateInterpolated(
     const templateVersion = version.replace(/\./g, "_");
     view[`before_${templateVersion}`] = !seenCurrentMcVersion;
     view[`from_${templateVersion}`] = seenCurrentMcVersion;
+    view[`exact_${templateVersion}`] = version === settings.minecraftVersion;
   }
   view.mods_toml_file = view.before_1_20_5 ? "mods.toml" : "neoforge.mods.toml";
 
@@ -138,6 +140,11 @@ function generateInterpolated(
   ret[`${javaFolder}/${modClassName}.java`] = encodeUtf8(
     interpolateTemplate(ModClass_java, view),
   );
+  if (view.from_1_21_1) {
+      ret[`${javaFolder}/${modClassName}Client.java`] = encodeUtf8(
+        interpolateTemplate(ModClassClient_java, view),
+      );
+  }
   return ret;
 }
 
