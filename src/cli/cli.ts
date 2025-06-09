@@ -27,6 +27,14 @@ program
       .default("mdg")
       .choices(["moddevgradle", "mdg", "neogradle", "ng"]),
   )
+  .addOption(
+    new Option(
+      "--executable-gradlew <string>",
+      "strategy to make gradlew executable",
+    )
+      .default("workflow-step")
+      .choices(["no", "workflow-step"]),
+  )
   .action(async (options) => {
     const {
       modName,
@@ -35,6 +43,7 @@ program
       minecraftVersion,
       outputFolder,
       gradlePlugin,
+      executableGradlew,
     } = options;
 
     const templatesFolder = fileURLToPath(
@@ -47,6 +56,7 @@ program
       packageName,
       minecraftVersion,
       useNeoGradle: gradlePlugin === "ng" || gradlePlugin === "neogradle",
+      chmodGradlewStep: executableGradlew === "workflow-step",
     };
     const result = await generateTemplate(
       templateInputs,

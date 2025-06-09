@@ -88,6 +88,7 @@ async function generateToJSON() {
     packageName: packageName.value,
     minecraftVersion: minecraftVersion.value,
     useNeoGradle: gradlePlugin.value === "NeoGradle",
+    chmodGradlewStep: true,
   };
   return generateTemplate(
     templateInputs,

@@ -7,6 +7,7 @@ export interface Settings {
   packageName: string;
   minecraftVersion: string;
   useNeoGradle: boolean;
+  chmodGradlewStep: boolean;
 }
 
 /**
@@ -101,6 +102,7 @@ function generateInterpolated(
     mod_group_id: settings.packageName,
     package_name: settings.packageName,
     mod_class_name: modClassName,
+    chmod_gradlew_step: settings.chmodGradlewStep,
   };
   const partials: Record<string, any> = {
     mdg_block_gradle,
