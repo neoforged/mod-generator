@@ -11,13 +11,15 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faDownload } from "@fortawesome/free-solid-svg-icons";
 
+const MC_VERSION_LOADING = "Loading...";
+
 const mcVersions = ref<string[]>([]);
 
 const modName = ref("Example Mod");
 const overrideModId = ref(false);
 const userOverridenModId = ref("");
 const packageName = ref("com.example.examplemod");
-const minecraftVersion = ref("1.21.4");
+const minecraftVersion = ref(MC_VERSION_LOADING);
 const gradlePlugin = ref("ModDevGradle");
 
 const modId = computed(() => {
@@ -30,13 +32,20 @@ const modId = computed(() => {
 
 const isFormValid = computed(() => {
   return (
+    minecraftVersion.value !== MC_VERSION_LOADING &&
     isModIdValid(modId.value) &&
     isModNameValid(modName.value) &&
     isPackageNameValid(packageName.value)
   );
 });
 
-onMounted(async () => (mcVersions.value = await fetchMinecraftVersions()));
+onMounted(async () => {
+  mcVersions.value = await fetchMinecraftVersions();
+  if (mcVersions.value.length > 0) {
+    // Select latest MC version by default
+    minecraftVersion.value = mcVersions.value[0];
+  }
+});
 
 function computeModId(modName: string): string {
   return modName.toLowerCase().replace(/[^a-z0-9]/g, "");
