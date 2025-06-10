@@ -115,7 +115,6 @@ function generateInterpolated(
     const templateVersion = version.replace(/\./g, "_");
     view[`before_${templateVersion}`] = !seenCurrentMcVersion;
     view[`from_${templateVersion}`] = seenCurrentMcVersion;
-    view[`exact_${templateVersion}`] = version === settings.minecraftVersion;
   }
   view.mods_toml_file = view.before_1_20_5 ? "mods.toml" : "neoforge.mods.toml";
 

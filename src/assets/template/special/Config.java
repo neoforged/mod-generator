@@ -22,20 +22,16 @@ import net.neoforged.neoforge.common.ModConfigSpec;
 {{ #before_1_20_5 }}
 @Mod.EventBusSubscriber(modid = {{ mod_class_name }}.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 {{ /before_1_20_5 }}
-{{ #exact_1_20_5 }}
+{{ #from_1_20_5 }}
+{{ #before_1_21 }}
 @EventBusSubscriber(modid = {{ mod_class_name }}.MODID, bus = EventBusSubscriber.Bus.MOD)
-{{ /exact_1_20_5 }}
-{{ #exact_1_20_6 }}
-@EventBusSubscriber(modid = {{ mod_class_name }}.MODID, bus = EventBusSubscriber.Bus.MOD)
-{{ /exact_1_20_6 }}
-{{ #exact_1_21 }}
-@EventBusSubscriber(modid = {{ mod_class_name }}.MODID, bus = EventBusSubscriber.Bus.MOD)
-{{ /exact_1_21 }}
+{{ /before_1_21 }}
+{{ /from_1_20_5 }}
 public class Config
 {
     private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
 
-{{ #before_1_21_1 }}
+{{ #before_1_20_4 }}
     private static final ModConfigSpec.BooleanValue LOG_DIRT_BLOCK = BUILDER
             .comment("Whether to log the dirt block on common setup")
             .define("logDirtBlock", true);
@@ -43,8 +39,8 @@ public class Config
     private static final ModConfigSpec.IntValue MAGIC_NUMBER = BUILDER
             .comment("A magic number")
             .defineInRange("magicNumber", 42, 0, Integer.MAX_VALUE);
-{{ /before_1_21_1 }}
-{{ #from_1_21_1 }}
+{{ /before_1_20_4 }}
+{{ #from_1_20_4 }}
     public static final ModConfigSpec.BooleanValue LOG_DIRT_BLOCK = BUILDER
             .comment("Whether to log the dirt block on common setup")
             .define("logDirtBlock", true);
@@ -52,33 +48,33 @@ public class Config
     public static final ModConfigSpec.IntValue MAGIC_NUMBER = BUILDER
             .comment("A magic number")
             .defineInRange("magicNumber", 42, 0, Integer.MAX_VALUE);
-{{ /from_1_21_1 }}
+{{ /from_1_20_4 }}
 
     public static final ModConfigSpec.ConfigValue<String> MAGIC_NUMBER_INTRODUCTION = BUILDER
             .comment("What you want the introduction message to be for the magic number")
             .define("magicNumberIntroduction", "The magic number is... ");
 
-{{ #before_1_21_1 }}
+{{ #before_1_20_4 }}
     // a list of strings that are treated as resource locations for items
     private static final ModConfigSpec.ConfigValue<List<? extends String>> ITEM_STRINGS = BUILDER
             .comment("A list of items to log on common setup.")
             .defineListAllowEmpty("items", List.of("minecraft:iron_ingot"), Config::validateItemName);
-{{ /before_1_21_1 }}
-{{ #from_1_21_1 }}
+{{ /before_1_20_4 }}
+{{ #from_1_20_4 }}
     // a list of strings that are treated as resource locations for items
     public static final ModConfigSpec.ConfigValue<List<? extends String>> ITEM_STRINGS = BUILDER
             .comment("A list of items to log on common setup.")
             .defineListAllowEmpty("items", List.of("minecraft:iron_ingot"), Config::validateItemName);
-{{ /from_1_21_1 }}
+{{ /from_1_20_4 }}
 
     static final ModConfigSpec SPEC = BUILDER.build();
 
-{{ #before_1_21_1 }}
+{{ #before_1_20_4 }}
     public static boolean logDirtBlock;
     public static int magicNumber;
     public static String magicNumberIntroduction;
     public static Set<Item> items;
-{{ /before_1_21_1 }}
+{{ /before_1_20_4 }}
 
     private static boolean validateItemName(final Object obj)
     {
@@ -90,7 +86,7 @@ public class Config
 {{ /from_1_21 }}
     }
 
-{{ #before_1_21_1 }}
+{{ #before_1_20_4 }}
     @SubscribeEvent
     static void onLoad(final ModConfigEvent event)
     {
@@ -108,5 +104,5 @@ public class Config
     {{ /from_1_21 }}
                 .collect(Collectors.toSet());
     }
-{{ /before_1_21_1 }}
+{{ /before_1_20_4 }}
 }
