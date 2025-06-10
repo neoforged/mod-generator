@@ -19,14 +19,6 @@ import net.neoforged.neoforge.common.ModConfigSpec;
 
 // An example config class. This is not required, but it's a good idea to have one to keep your config organized.
 // Demonstrates how to use Neo's config APIs
-{{ #before_1_20_5 }}
-@Mod.EventBusSubscriber(modid = {{ mod_class_name }}.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
-{{ /before_1_20_5 }}
-{{ #from_1_20_5 }}
-{{ #before_1_21 }}
-@EventBusSubscriber(modid = {{ mod_class_name }}.MODID, bus = EventBusSubscriber.Bus.MOD)
-{{ /before_1_21 }}
-{{ /from_1_20_5 }}
 public class Config
 {
     private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
@@ -61,11 +53,19 @@ public class Config
             .defineListAllowEmpty("items", List.of("minecraft:iron_ingot"), Config::validateItemName);
 {{ /before_1_20_4 }}
 {{ #from_1_20_4 }}
+{{ #before_1_21 }}
     // a list of strings that are treated as resource locations for items
     public static final ModConfigSpec.ConfigValue<List<? extends String>> ITEM_STRINGS = BUILDER
             .comment("A list of items to log on common setup.")
             .defineListAllowEmpty("items", List.of("minecraft:iron_ingot"), Config::validateItemName);
+{{ /before_1_21 }}
 {{ /from_1_20_4 }}
+{{ #from_1_21 }}
+    // a list of strings that are treated as resource locations for items
+    public static final ModConfigSpec.ConfigValue<List<? extends String>> ITEM_STRINGS = BUILDER
+            .comment("A list of items to log on common setup.")
+            .defineListAllowEmpty("items", List.of("minecraft:iron_ingot"), () -> "", Config::validateItemName);
+{{ /from_1_21 }}
 
     static final ModConfigSpec SPEC = BUILDER.build();
 
