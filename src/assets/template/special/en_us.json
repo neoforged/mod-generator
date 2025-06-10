@@ -1,7 +1,11 @@
 {
   "itemGroup.{{ mod_id }}": "Example Mod Tab",
   "block.{{ mod_id }}.example_block": "Example Block",
-  "item.{{ mod_id }}.example_item": "Example Item"{{ #from_1_21_1 }},
+{{ #before_1_21_1 }}
+  "item.{{ mod_id }}.example_item": "Example Item"
+{{ /before_1_21_1 }}
+{{ #from_1_21_1 }}
+  "item.{{ mod_id }}.example_item": "Example Item",
 
   "{{ mod_id }}.configuration.title": "{{ mod_name }} Configs",
   "{{ mod_id }}.configuration.section.{{ mod_id }}.common.toml": "{{ mod_name }} Configs",
