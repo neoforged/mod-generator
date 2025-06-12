@@ -41,8 +41,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 // The value here should match an entry in the META-INF/{{ mods_toml_file }} file
 @Mod({{ mod_class_name }}.MODID)
-public class {{ mod_class_name }}
-{
+public class {{ mod_class_name }} {
     // Define mod id in a common place for everything to reference
     public static final String MODID = "{{ mod_id }}";
     // Directly reference a slf4j logger
@@ -80,12 +79,11 @@ public class {{ mod_class_name }}
     // The constructor for the mod class is the first code that is run when your mod is loaded.
     // FML will recognize some parameter types like IEventBus or ModContainer and pass them in automatically.
 {{ #before_1_20_5 }}
-    public {{ mod_class_name }}(IEventBus modEventBus)
+    public {{ mod_class_name }}(IEventBus modEventBus) {
 {{ /before_1_20_5 }}
 {{ #from_1_20_5 }}
-    public {{ mod_class_name }}(IEventBus modEventBus, ModContainer modContainer)
+    public {{ mod_class_name }}(IEventBus modEventBus, ModContainer modContainer) {
 {{ /from_1_20_5 }}
-    {
         // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);
 
@@ -113,13 +111,13 @@ public class {{ mod_class_name }}
 {{ /from_1_20_5 }}
     }
 
-    private void commonSetup(final FMLCommonSetupEvent event)
-    {
+    private void commonSetup(FMLCommonSetupEvent event) {
         // Some common setup code
         LOGGER.info("HELLO FROM COMMON SETUP");
 
-        if (Config.LOG_DIRT_BLOCK.getAsBoolean())
+        if (Config.LOG_DIRT_BLOCK.getAsBoolean()) {
             LOGGER.info("DIRT BLOCK >> {}", BuiltInRegistries.BLOCK.getKey(Blocks.DIRT));
+        }
 
         LOGGER.info("{}{}", Config.MAGIC_NUMBER_INTRODUCTION.get(), Config.MAGIC_NUMBER.getAsInt());
 
@@ -127,16 +125,15 @@ public class {{ mod_class_name }}
     }
 
     // Add the example block item to the building blocks tab
-    private void addCreative(BuildCreativeModeTabContentsEvent event)
-    {
-        if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS)
+    private void addCreative(BuildCreativeModeTabContentsEvent event) {
+        if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS) {
             event.accept(EXAMPLE_BLOCK_ITEM);
+        }
     }
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call
     @SubscribeEvent
-    public void onServerStarting(ServerStartingEvent event)
-    {
+    public void onServerStarting(ServerStartingEvent event) {
         // Do something when the server starts
         LOGGER.info("HELLO from server starting");
     }
@@ -148,11 +145,9 @@ public class {{ mod_class_name }}
 {{ #from_1_20_5 }}
     @EventBusSubscriber(modid = MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 {{ /from_1_20_5 }}
-    public static class ClientModEvents
-    {
+    public static class ClientModEvents {
         @SubscribeEvent
-        public static void onClientSetup(FMLClientSetupEvent event)
-        {
+        public static void onClientSetup(FMLClientSetupEvent event) {
             // Some client setup code
             LOGGER.info("HELLO FROM CLIENT SETUP");
             LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());
