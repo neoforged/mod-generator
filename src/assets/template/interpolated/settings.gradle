@@ -1,8 +1,9 @@
 pluginManagement {
     repositories {
-        mavenLocal()
         gradlePluginPortal()
+{{ #use_ng }}
         maven { url = 'https://maven.neoforged.net/releases' }
+{{ /use_ng }}
     }
 }
 
