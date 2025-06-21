@@ -21,6 +21,7 @@ const userOverridenModId = ref("");
 const packageName = ref("com.example.examplemod");
 const minecraftVersion = ref(MC_VERSION_LOADING);
 const gradlePlugin = ref("ModDevGradle");
+const mixins = ref(false);
 
 const modId = computed(() => {
   if (overrideModId.value) {
@@ -89,6 +90,7 @@ async function generateToJSON() {
     minecraftVersion: minecraftVersion.value,
     useNeoGradle: gradlePlugin.value === "NeoGradle",
     chmodGradlewStep: true,
+    mixins: mixins.value
   };
   return generateTemplate(
     templateInputs,
@@ -152,6 +154,18 @@ async function downloadZip() {
         <option>NeoGradle</option>
       </select>
     </p>
+
+    <details>
+      <summary>Advanced Options</summary>
+      <br/>
+      <div style="margin-left: 1rem">
+        <input id="mixins" type="checkbox" v-model="mixins" style="width: 1rem; height: 1rem"/>
+        <label for="mixins" style="margin-left: 0.5rem"><b>Add mixin configuration</b></label>
+        <div style="margin-left: 2rem">Tick to add a mixin configuration to the generated project</div>
+      </div>
+    </details>
+
+    <br/>
 
     <h3 v-if="!isFormValid">Invalid input!</h3>
     <p v-if="!isModNameValid(modName)">

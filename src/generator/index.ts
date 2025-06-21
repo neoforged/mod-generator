@@ -8,6 +8,7 @@ export interface Settings {
   minecraftVersion: string;
   useNeoGradle: boolean;
   chmodGradlewStep: boolean;
+  mixins: boolean;
 }
 
 /**
@@ -72,6 +73,7 @@ function generateRaw(inputs: TemplateInputs, ret: GeneratedTemplate) {
 }
 
 import en_us_json from "../assets/template/special/en_us.json?raw";
+import mixins_json from "../assets/template/special/mixins.json?raw";
 import Config_java from "../assets/template/special/Config.java?raw";
 import ModClass_java from "../assets/template/special/ModClass.java?raw";
 import ModClassClient_java from "../assets/template/special/ModClassClient.java?raw";
@@ -104,6 +106,7 @@ function generateInterpolated(
     package_name: settings.packageName,
     mod_class_name: modClassName,
     chmod_gradlew_step: settings.chmodGradlewStep,
+    mixins: settings.mixins
   };
   const partials: Record<string, any> = {
     mdg_block_gradle,
@@ -146,6 +149,12 @@ function generateInterpolated(
         interpolateTemplate(ModClassClient_java, view),
       );
   }
+
+  if (settings.mixins) {
+    ret[`src/main/resources/${settings.modId}.mixins.json`] =
+      encodeUtf8(interpolateTemplate(mixins_json, view))
+  }
+
   return ret;
 }
 
