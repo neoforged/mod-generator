@@ -38,7 +38,7 @@ jobs:
                   <h3>Testing page for <a href="https://github.com/neoforged/mod-generator/pull/${{ github.event.pull_request.number }}">PR #${{ github.event.pull_request.number }}</a></h3>
                   <div id="mod-generator-app"></div>
                 </div>
-                <script type="module" src="./mod-generator.js" />
+                <script type="module" src="./mod-generator.js"></script>
                 <link rel="stylesheet" href="./mod-generator.css">
               </body>
             </html>
