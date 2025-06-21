@@ -1,0 +1,49 @@
+name: 'Build Pull Request'
+run-name: Build and upload preview for PR ${{ github.event.pull_request.number }}
+
+on:
+  pull_request:
+    types: [synchronize, opened]
+
+jobs:
+  build:
+    name: Build and upload site
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: npm
+
+      - name: Install dependencies
+        run: npm install
+      - name: Build website
+        run: npm run build
+      - name: Add index file
+        env:
+          FILE: |
+            <!doctype html>
+            <html lang="en">
+              <head>
+                <meta charset="UTF-8" />
+                <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+                <link rel="stylesheet" href="/style.css" />
+                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                <title>NeoForge Mod Generator</title>
+              </head>
+              <body>
+                <div id="container">
+                  <h2>NeoForge Mod Generator</h2>
+                  <h3>Testing page for <a href="https://github.com/neoforged/mod-generator/pull/${{ github.event.pull_request.number }}">PR #${{ github.event.pull_request.number }}</a></h3>
+                  <div id="mod-generator-app"></div>
+                </div>
+                <script type="module" src="./mod-generator.js" />
+                <link rel="stylesheet" href="./mod-generator.css">
+              </body>
+            </html>
+        run: echo "$FILE" >> ./dist/index.html
+      - uses: matyrobbrt/cloudflare-pr-previews/upload@v1
+        name: Upload website
+        with:
+          build-dir: ./dist/
