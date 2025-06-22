@@ -27,8 +27,8 @@ jobs:
             <html lang="en">
               <head>
                 <meta charset="UTF-8" />
-                <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-                <link rel="stylesheet" href="/style.css" />
+                <link rel="icon" type="image/svg+xml" href="/public/vite.svg" />
+                <link rel="stylesheet" href="/public/style.css" />
                 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
                 <title>NeoForge Mod Generator</title>
               </head>
@@ -42,7 +42,9 @@ jobs:
                 <link rel="stylesheet" href="./mod-generator.css">
               </body>
             </html>
-        run: echo "$FILE" >> ./dist/index.html
+        run: |
+          echo "$FILE" >> ./dist/index.html
+          cp public ./dist/public
       - uses: matyrobbrt/cloudflare-pr-previews/upload@v1
         name: Upload website
         with:
