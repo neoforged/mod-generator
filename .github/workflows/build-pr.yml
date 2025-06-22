@@ -35,8 +35,8 @@ jobs:
       - name: Copy files
         run: |
           cp dist/mod-generator.js website/assets/js/mod-generator.js
-          mkdir website/assets/js
-          cp dist/mod-generator.css website/assets/js/mod-generator.css
+          mkdir website/assets/css
+          cp dist/mod-generator.css website/assets/css/mod-generator.css
 
       - name: Generate layout
         env:
