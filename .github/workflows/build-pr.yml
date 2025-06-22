@@ -3,7 +3,7 @@ run-name: Build and upload preview for PR ${{ github.event.pull_request.number }
 
 on:
   pull_request:
-    types: [synchronize, opened]
+    types: [ synchronize, opened ]
 
 jobs:
   build:
@@ -38,7 +38,7 @@ jobs:
           cp dist/mod-generator.css website/assets/js/mod-generator.css
 
       - name: Generate layout
-        with:
+        env:
           FILE: |
             {{ define "main" }}
             <main class="main list" role="main">
