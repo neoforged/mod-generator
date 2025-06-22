@@ -20,32 +20,49 @@ jobs:
         run: npm install
       - name: Build website
         run: npm run build
-      - name: Add index file
-        env:
-          FILE: |
-            <!doctype html>
-            <html lang="en">
-              <head>
-                <meta charset="UTF-8" />
-                <link rel="icon" type="image/svg+xml" href="/public/vite.svg" />
-                <link rel="stylesheet" href="/public/style.css" />
-                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-                <title>NeoForge Mod Generator</title>
-              </head>
-              <body>
-                <div id="container">
-                  <h2>NeoForge Mod Generator</h2>
-                  <h3>Testing page for <a href="https://github.com/neoforged/mod-generator/pull/${{ github.event.pull_request.number }}">PR #${{ github.event.pull_request.number }}</a></h3>
-                  <div id="mod-generator-app"></div>
-                </div>
-                <script type="module" src="./mod-generator.js"></script>
-                <link rel="stylesheet" href="./mod-generator.css">
-              </body>
-            </html>
+
+      - uses: actions/checkout@v4
+        with:
+          path: website
+          submodules: recursive
+          repository: neoforged/websites
+
+      - name: Setup hugo
+        uses: peaceiris/actions-hugo@v2
+        with:
+          hugo-version: latest
+
+      - name: Copy files
         run: |
-          echo "$FILE" >> ./dist/index.html
-          cp public ./dist/public
+          cp dist/mod-generator.js website/assets/js/mod-generator.js
+          cp dist/mod-generator.css website/assets/js/mod-generator.css
+
+      - name: Generate layout
+        with:
+          FILE: |
+            {{ define "main" }}
+            <main class="main list" role="main">
+                <h1>NeoForge Testing Mod Generator</h1>
+
+                <p>
+                    This page is based on mod-generator <a href="https://github.com/neoforged/mod-generator/pull/${{ github.event.pull_request.number }}">PR #${{ github.event.pull_request.number }}</a>
+                </p>
+
+                <div id="mod-generator-app"></div>
+                <script type="module" src="/js/mod-generator.js"></script>
+                <link rel="stylesheet" href="/css/mod-generator.css" />
+            </main>
+            {{ end }}
+        run: |
+          rm website/layouts/page/mod-generator.html
+          echo "$FILE" >> website/layouts/page/mod-generator.html
+
+      - name: Build
+        run: |
+          cd website
+          hugo -F
+
       - uses: matyrobbrt/cloudflare-pr-previews/upload@v1
         name: Upload website
         with:
-          build-dir: ./dist/
+          build-dir: ./website/public

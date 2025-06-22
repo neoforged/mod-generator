@@ -1,22 +1,23 @@
 import { createApp } from "vue";
-import PrimeVue from 'primevue/config';
 import Generator from "./components/Generator.vue";
-import Aura from '@primeuix/themes/aura'
-import {Button, FloatLabel, InputText, Message, Select, Toast, ToastService} from "primevue";
-import {Form} from "@primevue/forms";
 
-const app = createApp(Generator);
-app.use(PrimeVue, {
-    theme: {
-        preset: Aura
+import 'vuetify/lib/styles/main.css'
+import '@fortawesome/fontawesome-free/css/all.min.css'
+
+import {createVuetify} from "vuetify"
+
+import { aliases, fa } from 'vuetify/iconsets/fa'
+
+const vuetify = createVuetify({
+    icons: {
+        defaultSet: 'fa',
+        aliases,
+        sets: {
+            fa,
+        },
     }
 })
-    .use(ToastService)
-    .component('Button', Button)
-    .component('InputText', InputText)
-    .component('FloatLabel', FloatLabel)
-    .component('Message', Message)
-    .component('Form', Form)
-    .component('Select', Select)
-    .component('Toast', Toast)
+
+const app = createApp(Generator);
+app.use(vuetify)
 app.mount("#mod-generator-app");
