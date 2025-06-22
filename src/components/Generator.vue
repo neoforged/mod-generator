@@ -175,6 +175,9 @@ const submit = async () => {
           persistent-hint
           required
           variant="outlined"
+          :menu-props="{
+            scrollStrategy: 'none'
+          }"
       />
       <br />
 
@@ -186,6 +189,9 @@ const submit = async () => {
           persistent-hint
           required
           variant="outlined"
+          :menu-props="{
+            scrollStrategy: 'none'
+          }"
       />
       <br />
 
