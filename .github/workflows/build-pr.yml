@@ -49,8 +49,11 @@ jobs:
                 </p>
 
                 <div id="mod-generator-app"></div>
-                <script type="module" src="/js/mod-generator.js"></script>
-                <link rel="stylesheet" href="/css/mod-generator.css" />
+                {{ $modJs := resources.Get "js/mod-generator.js" | js.Build "mod-generator.js" | minify | fingerprint }}
+                <script type="module" src="{{ $modJs.Permalink }}"></script>
+            
+                {{ $style := resources.Get "css/mod-generator.css" | css.Css | resources.Minify | resources.Fingerprint }}
+                <link rel="stylesheet" href="{{ $style.Permalink }}" />
             </main>
             {{ end }}
         run: |
