@@ -63,6 +63,12 @@ jobs:
           cd website
           hugo -F
 
+      - name: Upload website
+        uses: actions/upload-artifact@v4
+        with:
+          name: website
+          path: website
+
       - uses: matyrobbrt/cloudflare-pr-previews/upload@v1
         name: Upload website
         with:
