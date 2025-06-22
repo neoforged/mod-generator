@@ -13,7 +13,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 22
           cache: npm
 
       - name: Install dependencies
@@ -34,8 +34,8 @@ jobs:
 
       - name: Copy files
         run: |
-          cp dist/mod-generator.js website/assets/js/mod-generator.js
-          cp dist/mod-generator.css website/assets/js/mod-generator.css
+          cp dist/mod-generator.js website/static/js/mod-generator.js
+          cp dist/mod-generator.css website/static/css/mod-generator.css
 
       - name: Generate layout
         env:
@@ -49,11 +49,8 @@ jobs:
                 </p>
 
                 <div id="mod-generator-app"></div>
-                {{ $modJs := resources.Get "js/mod-generator.js" | js.Build "mod-generator.js" | minify | fingerprint }}
-                <script type="module" src="{{ $modJs.Permalink }}"></script>
-            
-                {{ $style := resources.Get "css/mod-generator.css" | css.Css | resources.Minify | resources.Fingerprint }}
-                <link rel="stylesheet" href="{{ $style.Permalink }}" />
+                <script type="module" src="/js/mod-generator.js"></script>
+                <link rel="stylesheet" href="/css/mod-generator.css" />
             </main>
             {{ end }}
         run: |
