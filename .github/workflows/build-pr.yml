@@ -34,9 +34,9 @@ jobs:
 
       - name: Copy files
         run: |
-          mkdir website/static/modgen
-          cp dist/mod-generator.js website/static/modgen/mod-generator.js
-          cp dist/mod-generator.css website/static/modgen/mod-generator.css
+          cp dist/mod-generator.js website/assets/js/mod-generator.js
+          mkdir website/assets/js
+          cp dist/mod-generator.css website/assets/js/mod-generator.css
 
       - name: Generate layout
         env:
@@ -50,8 +50,11 @@ jobs:
                 </p>
 
                 <div id="mod-generator-app"></div>
-                <script type="module" src="/modgen/mod-generator.js"></script>
-                <link rel="stylesheet" href="/modgen/mod-generator.css" />
+                {{ $js:= resources.Get "js/mod-generator.js" }}
+                <script type="module" src="{{ $js.RelPermalink }}"></script>
+            
+                {{ $css:= resources.Get "css/mod-generator.css" }}
+                <link rel="stylesheet" href="{{ css.RelPermalink }}" />
             </main>
             {{ end }}
         run: |
@@ -62,12 +65,6 @@ jobs:
         run: |
           cd website
           hugo -F
-
-      - name: Upload website
-        uses: actions/upload-artifact@v4
-        with:
-          name: website
-          path: website
 
       - uses: matyrobbrt/cloudflare-pr-previews/upload@v1
         name: Upload website
