@@ -34,8 +34,9 @@ jobs:
 
       - name: Copy files
         run: |
-          cp dist/mod-generator.js website/static/js/mod-generator.js
-          cp dist/mod-generator.css website/static/css/mod-generator.css
+          mkdir website/static/modgen
+          cp dist/mod-generator.js website/static/modgen/mod-generator.js
+          cp dist/mod-generator.css website/static/modgen/mod-generator.css
 
       - name: Generate layout
         env:
@@ -49,8 +50,8 @@ jobs:
                 </p>
 
                 <div id="mod-generator-app"></div>
-                <script type="module" src="/js/mod-generator.js"></script>
-                <link rel="stylesheet" href="/css/mod-generator.css" />
+                <script type="module" src="/modgen/mod-generator.js"></script>
+                <link rel="stylesheet" href="/modgen/mod-generator.css" />
             </main>
             {{ end }}
         run: |
