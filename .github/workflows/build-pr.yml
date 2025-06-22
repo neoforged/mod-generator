@@ -44,7 +44,7 @@ jobs:
             </html>
         run: |
           echo "$FILE" >> ./dist/index.html
-          cp public ./dist/public
+          cp -r public ./dist/public
       - uses: matyrobbrt/cloudflare-pr-previews/upload@v1
         name: Upload website
         with:
