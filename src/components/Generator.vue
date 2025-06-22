@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
+import {onMounted, reactive, ref} from "vue";
 import { generateTemplate } from "../generator/";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
@@ -10,40 +10,32 @@ import {
 } from "../generator/versions.ts";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faDownload } from "@fortawesome/free-solid-svg-icons";
+import { zodResolver } from '@primeuix/forms/resolvers/zod';
+import { z } from 'zod';
+import {useToast} from "primevue";
+import type {FormFieldState, FormSubmitEvent} from "@primevue/forms";
 
-const MC_VERSION_LOADING = "Loading...";
+type FormState = {
+  [key: string]: FormFieldState
+}
+
+const toast = useToast()
 
 const mcVersions = ref<string[]>([]);
 
-const modName = ref("Example Mod");
-const overrideModId = ref(false);
-const userOverridenModId = ref("");
-const packageName = ref("com.example.examplemod");
-const minecraftVersion = ref(MC_VERSION_LOADING);
-const gradlePlugin = ref("ModDevGradle");
-
-const modId = computed(() => {
-  if (overrideModId.value) {
-    return userOverridenModId.value;
-  } else {
-    return computeModId(modName.value);
-  }
-});
-
-const isFormValid = computed(() => {
-  return (
-    minecraftVersion.value !== MC_VERSION_LOADING &&
-    isModIdValid(modId.value) &&
-    isModNameValid(modName.value) &&
-    isPackageNameValid(packageName.value)
-  );
-});
+const initialValues = reactive({
+  modName: 'Example Mod',
+  modId: 'examplemod',
+  packageName: 'com.example.examplemod',
+  minecraftVersion: '',
+  gradlePlugin: 'ModDevGradle'
+})
 
 onMounted(async () => {
   mcVersions.value = await fetchMinecraftVersions();
   if (mcVersions.value.length > 0) {
     // Select latest MC version by default
-    minecraftVersion.value = mcVersions.value[0];
+    initialValues.minecraftVersion = mcVersions.value[0];
   }
 });
 
@@ -51,43 +43,29 @@ function computeModId(modName: string): string {
   return modName.toLowerCase().replace(/[^a-z0-9]/g, "");
 }
 
-function chooseModIdManually() {
-  overrideModId.value = true;
-  userOverridenModId.value = computeModId(modName.value);
+const automaticModId = ref(true)
+
+const onToggleModId = (form: FormState) => {
+  if (automaticModId.value) {
+  } else {
+    form.modId.value = computeModId(form.modName.value)
+  }
+  automaticModId.value = !automaticModId.value
 }
 
-function chooseModIdAutomatically() {
-  overrideModId.value = false;
+const onModNameUpdated = (form: FormState, value: string) => {
+  if (automaticModId.value) {
+    form.modId.value = computeModId(value)
+  }
 }
 
-function isModNameValid(modName: string): boolean {
-  // FML doesn't do any check for the mod name,
-  // however let's ask for at least 3 non-space characters.
-  let nameWithoutSpaces = modName.replace(/\s/g, "");
-  return nameWithoutSpaces.length >= 3;
-}
-
-// Sourced from FML. Should work in JS too?
-const MOD_ID_REGEX = /^(?=.{2,64}$)[a-z][a-z0-9_]*(\.[a-z][a-z0-9_]*)*$/;
-
-function isModIdValid(modId: string): boolean {
-  return MOD_ID_REGEX.test(modId);
-}
-
-// Sourced from https://stackoverflow.com/questions/29783092/regexp-to-match-java-package-name
-const PACKAGE_NAME_REGEX = /^[a-z][a-z0-9_]*(\.[a-z0-9_]+)+[0-9a-z_]$/;
-
-function isPackageNameValid(packageName: string): boolean {
-  return PACKAGE_NAME_REGEX.test(packageName);
-}
-
-async function generateToJSON() {
+async function generateToJSON(fields: Record<string, FormFieldState>) {
   const settings = {
-    modName: modName.value,
-    modId: modId.value,
-    packageName: packageName.value,
-    minecraftVersion: minecraftVersion.value,
-    useNeoGradle: gradlePlugin.value === "NeoGradle",
+    modName: fields.modName.value,
+    modId: fields.modId.value,
+    packageName: fields.packageName.value,
+    minecraftVersion: fields.minecraftVersion.value,
+    useNeoGradle: fields.gradlePlugin.value === "NeoGradle",
     chmodGradlewStep: true,
   };
   return generateTemplate(
@@ -97,82 +75,120 @@ async function generateToJSON() {
   );
 }
 
-async function downloadZip() {
+async function downloadZip(fields: Record<string, FormFieldState>) {
   const zip = new JSZip();
-  for (let [k, v] of Object.entries(await generateToJSON())) {
+  for (let [k, v] of Object.entries(await generateToJSON(fields))) {
     zip.file(k, v);
   }
-  zip.generateAsync({ type: "blob" }).then((blob) => {
+  await zip.generateAsync({ type: "blob" }).then((blob) => {
     saveAs(
       blob,
-      `${computeModId(modId.value)}-template-${minecraftVersion.value}.zip`,
+      `${computeModId(fields.modId.value)}-template-${fields.minecraftVersion.value}.zip`,
     );
   });
 }
+
+const onFormSubmit = (event: FormSubmitEvent) => {
+  if (!event.valid) {
+    toast.add({
+      severity: 'error',
+      summary: 'Mod configuration is not valid',
+      life: 3000
+    })
+  } else {
+    const msg = {
+      severity: 'success',
+      summary: 'Mod project is being generated... please wait',
+      closable: false
+    }
+    toast.add(msg)
+    downloadZip(event.states)
+        .then(() => toast.remove(msg))
+  }
+}
+
+const resolver = zodResolver(
+    z.object({
+      modName: z.string()
+          .trim()
+          // FML doesn't do any check for the mod name,
+          // however let's ask for at least 3 non-space characters.
+          .min(3, { message: 'Mod name should have at least 3 characters' }),
+
+      modId: z.string()
+          .trim()
+          .min(2, { message: 'Mod ID must have at least 2 characters '})
+          .max(64, { message: 'Mod ID must have at most 64 characters '})
+          // Regex sourced from FML
+          .regex(/^(?=.{2,64}$)[a-z][a-z0-9_]*(\.[a-z][a-z0-9_]*)*$/, { message: 'Invalid mod ID' }),
+
+      packageName: z.string()
+          .trim()
+          // Sourced from https://stackoverflow.com/questions/29783092/regexp-to-match-java-package-name
+          .regex(/^[a-z][a-z0-9_]*(\.[a-z0-9_]+)+[0-9a-z_]$/, { message: 'Package name is not valid' })
+    })
+)
+
 </script>
 
 <template>
   <div class="mod-generator" v-if="mcVersions.length > 0">
-    <h3>Mod Name</h3>
-    <p>Choose a name for your mod.</p>
-    <p><input v-model="modName" type="text" /></p>
+    <Toast />
+    <div class="card flex justify-center">
+      <Form v-slot="$form" :initialValues :resolver @submit="onFormSubmit" >
+        <FloatLabel variant="on">
+          <label for="mod-name">Mod Name</label>
+          <InputText @valueChange="(value: string) => onModNameUpdated($form, value)" id="mod-name" name="modName" aria-describedby="mod-name-help" fluid />
+        </FloatLabel>
+        <Message size="small" severity="secondary" variant="simple">Choose a name for your mod.</Message>
+        <Message v-if="$form.modName?.invalid" severity="error" size="small" variant="simple">{{ $form.modName.error?.message }}</Message>
 
-    <h3>Mod Id</h3>
-    <p>Choose an identifier for your mod. It should be unique for your mod.</p>
-    <div v-if="overrideModId">
-      <p>
-        <a @click="chooseModIdAutomatically">
-          Click here to infer from mod name.
-        </a>
-      </p>
-      <p><input v-model="userOverridenModId" type="text" /></p>
+        <br />
+
+        <FloatLabel variant="on">
+          <label for="mod-id">Mod ID</label>
+          <InputText id="mod-id" name="modId" aria-describedby="mod-id-help" :disabled="automaticModId" fluid />
+        </FloatLabel>
+        <Message size="small" severity="secondary" variant="simple">
+          Choose an identifier for your mod. It should be unique for your mod.
+          <br />
+          <a @click="onToggleModId($form)">{{ automaticModId ? 'Inferred from mod name. Click here to choose another mod id.' : 'Click here to infer from mod name.' }}</a>
+        </Message>
+        <Message v-if="$form.modId?.invalid" severity="error" size="small" variant="simple">{{ $form.modId.error?.message }}</Message>
+
+        <br />
+
+        <FloatLabel variant="on">
+          <label for="package-name">Package Name</label>
+          <InputText id="package-name" name="packageName" aria-describedby="package-name-help" fluid />
+        </FloatLabel>
+        <Message size="small" severity="secondary" variant="simple">Choose a package name for your mod. It should be unique for your mod.</Message>
+        <Message v-if="$form.packageName?.invalid" severity="error" size="small" variant="simple">{{ $form.packageName.error?.message }}</Message>
+
+        <br />
+
+        <FloatLabel variant="on">
+          <Select inputId="minecraft-version" name="minecraftVersion" aria-describedby="minecraft-version-help" :options="mcVersions" fluid />
+          <label for="minecraft-version">Minecraft Version</label>
+        </FloatLabel>
+        <Message size="small" severity="secondary" variant="simple">Choose the Minecraft version for your mod.</Message>
+        <Message v-if="$form.minecraftVersion?.invalid" severity="error" size="small" variant="simple">{{ $form.minecraftVersion.error?.message }}</Message>
+
+        <br />
+
+        <FloatLabel variant="on">
+          <Select inputId="gradle-plugin" name="gradlePlugin" aria-describedby="gradle-plugin-help" :options="['ModDevGradle', 'NeoGradle']" fluid />
+          <label for="gradle-plugin">Gradle Plugin</label>
+        </FloatLabel>
+        <Message size="small" severity="secondary" variant="simple">Choose the Gradle plugin to use for your mod.</Message>
+
+        <br />
+
+        <Button type="submit" :severity="$form.valid ? 'success' : 'danger'">
+          <FontAwesomeIcon :icon="faDownload" /> Download Mod Project
+        </Button>
+      </Form>
     </div>
-    <p v-else>
-      Inferred from mod name: <code>{{ modId }} </code>.
-      <a @click="chooseModIdManually">Click here to choose another modid.</a>
-    </p>
-
-    <h3>Package Name</h3>
-    <p>Choose a package name for your mod. It should be unique for your mod.</p>
-    <p><input v-model="packageName" type="text" /></p>
-
-    <h3>Minecraft Version</h3>
-    <p>Choose the Minecraft version for your mod.</p>
-    <p>
-      <select v-model="minecraftVersion">
-        <option v-for="version in mcVersions">{{ version }}</option>
-      </select>
-    </p>
-
-    <h3>Gradle Plugin</h3>
-    <p>Choose the Gradle plugin to use for your mod.</p>
-    <p>
-      <select v-model="gradlePlugin">
-        <option>ModDevGradle</option>
-        <option>NeoGradle</option>
-      </select>
-    </p>
-
-    <h3 v-if="!isFormValid">Invalid input!</h3>
-    <p v-if="!isModNameValid(modName)">
-      Please choose a valid mod name. <code>{{ modName }}</code> is not a valid
-      mod name.
-    </p>
-    <p v-if="!isModIdValid(modId)">
-      Please choose a valid mod identifier. <code>{{ modId }}</code> is not a
-      valid mod identifier.
-    </p>
-    <p v-if="!isPackageNameValid(packageName)">
-      Please choose a valid package name. <code>{{ packageName }}</code> is not
-      a valid package name.
-    </p>
-    <button
-      class="download-button"
-      @click="downloadZip"
-      :disabled="!isFormValid"
-    >
-      <FontAwesomeIcon :icon="faDownload" /> Download Mod Project
-    </button>
   </div>
   <div v-else>
     <p>Loading Minecraft versions...</p>
