@@ -176,8 +176,7 @@ const submit = async () => {
           required
           variant="outlined"
           :menu-props="{
-            scrollStrategy: 'none',
-            location: 'right center'
+            scrollStrategy: 'none'
           }"
       />
       <br />
@@ -191,8 +190,7 @@ const submit = async () => {
           required
           variant="outlined"
           :menu-props="{
-            scrollStrategy: 'none',
-            location: 'right center'
+            scrollStrategy: 'none'
           }"
       />
       <br />
