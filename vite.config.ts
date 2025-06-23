@@ -1,5 +1,6 @@
 import { defineConfig, Plugin } from "vite";
 import vue from "@vitejs/plugin-vue";
+import vuetify from 'vite-plugin-vuetify'
 import path from "path";
 import { readFileSync } from "fs";
 
@@ -40,7 +41,7 @@ export default defineConfig({
     // Required in library mode to get rid of process.env in the built file.
     "process.env.NODE_ENV": '"production"',
   },
-  plugins: [vue(), bufferLoader],
+  plugins: [vue(), vuetify({ autoImport: true }), bufferLoader],
   resolve: {
     alias: {
       "@assets": path.resolve(__dirname, "src/assets"),
