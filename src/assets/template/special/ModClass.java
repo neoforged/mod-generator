@@ -22,14 +22,19 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 {{ #before_1_20_5 }}
 import net.neoforged.fml.ModLoadingContext;
+import net.neoforged.fml.common.Mod.EventBusSubscriber;
 {{ /before_1_20_5 }}
 {{ #from_1_20_5 }}
 import net.neoforged.fml.ModContainer;
+{{ #before_1_21_1 }}
 import net.neoforged.fml.common.EventBusSubscriber;
+{{ /before_1_21_1 }}
 {{ /from_1_20_5 }}
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
+{{ #before_1_21_1 }}
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+{{ /after_1_21_1 }}
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
@@ -137,20 +142,8 @@ public class {{ mod_class_name }} {
         // Do something when the server starts
         LOGGER.info("HELLO from server starting");
     }
+{{ #before_1_21_1 }}
 
-    // You can use EventBusSubscriber to automatically register all static methods in the class annotated with @SubscribeEvent
-{{ #before_1_20_5 }}
-    @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
-{{ /before_1_20_5 }}
-{{ #from_1_20_5 }}
-    @EventBusSubscriber(modid = MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
-{{ /from_1_20_5 }}
-    public static class ClientModEvents {
-        @SubscribeEvent
-        public static void onClientSetup(FMLClientSetupEvent event) {
-            // Some client setup code
-            LOGGER.info("HELLO FROM CLIENT SETUP");
-            LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());
-        }
-    }
+{{client_mod_events}}
+{{ /before_1_21_1 }}
 }

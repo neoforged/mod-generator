@@ -15,4 +15,6 @@ public class {{ mod_class_name }}Client {
         // Do not forget to add translations for your config options to the en_us.json file.
         container.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
     }
+
+{{client_mod_events}}
 }
