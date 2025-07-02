@@ -50,7 +50,7 @@ public class {{ mod_class_name }} {
     // Define mod id in a common place for everything to reference
     public static final String MODID = "{{ mod_id }}";
     // Directly reference a slf4j logger
-    private static final Logger LOGGER = LogUtils.getLogger();
+    public static final Logger LOGGER = LogUtils.getLogger();
     // Create a Deferred Register to hold Blocks which will all be registered under the "{{ mod_id }}" namespace
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(MODID);
     // Create a Deferred Register to hold Items which will all be registered under the "{{ mod_id }}" namespace
