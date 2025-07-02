@@ -75,7 +75,6 @@ import en_us_json from "../assets/template/special/en_us.json?raw";
 import Config_java from "../assets/template/special/Config.java?raw";
 import ModClass_java from "../assets/template/special/ModClass.java?raw";
 import ModClassClient_java from "../assets/template/special/ModClassClient.java?raw";
-import ClientModEvents__java from "../assets/template/special/ClientModEvents.java?raw";
 import mdg_block_gradle from "../assets/template/special/mdg_block.gradle?raw";
 import ng_block_gradle from "../assets/template/special/ng_block.gradle?raw";
 import neoforge_mods_toml from "../assets/template/special/neoforge.mods.toml?raw";
@@ -120,8 +119,6 @@ function generateInterpolated(
     view[`from_${templateVersion}`] = seenCurrentMcVersion;
   }
   view.mods_toml_file = view.before_1_20_5 ? "mods.toml" : "neoforge.mods.toml";
-
-  view.client_mod_events = interpolateTemplate(ClientModEvents__java, view)
 
   iterateGlob(inputs.interpolated, "interpolated/", (filePath, contents) => {
     const textContent = new TextDecoder().decode(contents);
