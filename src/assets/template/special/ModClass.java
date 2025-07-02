@@ -22,13 +22,16 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
+{{ #from_1_20_5 }}
+import net.neoforged.fml.ModContainer;
+{{ /from_1_20_5 }}
 {{ #before_1_21_1 }}
 {{ #before_1_20_5 }}
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.common.Mod.EventBusSubscriber;
 {{ /before_1_20_5 }}
 {{ #from_1_20_5 }}
-import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.common.EventBusSubscriber;
 {{ /from_1_20_5 }}
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 {{ /before_1_21_1 }}
