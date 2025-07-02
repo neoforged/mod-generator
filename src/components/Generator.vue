@@ -129,7 +129,7 @@ const submit = async () => {
           required
           :error-messages="v$.modName.$errors.map(e => e.$message as string)"
           @blur="v$.modName.$validate"
-          @input="v$.modName.$validate"
+          @input="v$.modName.$validate().then(() => automaticModId ? v$.modId.$validate() : undefined)"
           variant="outlined"
           class="rounded"
       />
@@ -147,6 +147,7 @@ const submit = async () => {
           variant="outlined"
           class="rounded"
           :disabled="automaticModId"
+          :bg-color="v$.modId.$errors.length > 0 && automaticModId ? 'red' : undefined"
       />
       <v-checkbox
           v-model="automaticModId"
