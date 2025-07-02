@@ -25,7 +25,7 @@ public class {{ mod_class_name }}Client {
     @SubscribeEvent
     static void onClientSetup(FMLClientSetupEvent event) {
         // Some client setup code
-        LOGGER.info("HELLO FROM CLIENT SETUP");
-        LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());
+        {{ mod_class_name }}.LOGGER.info("HELLO FROM CLIENT SETUP");
+        {{ mod_class_name }}.LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());
     }
 }
