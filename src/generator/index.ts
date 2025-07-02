@@ -121,7 +121,7 @@ function generateInterpolated(
   }
   view.mods_toml_file = view.before_1_20_5 ? "mods.toml" : "neoforge.mods.toml";
 
-  view.client_mod_events = encodeUtf8(interpolateTemplate(ClientModEvents__java, view))
+  view.client_mod_events = interpolateTemplate(ClientModEvents__java, view)
 
   iterateGlob(inputs.interpolated, "interpolated/", (filePath, contents) => {
     const textContent = new TextDecoder().decode(contents);
