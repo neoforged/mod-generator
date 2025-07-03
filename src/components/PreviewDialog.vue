@@ -19,16 +19,27 @@ const fileIcons: {
 
   'toml': 'fas fa-file-pen',
   'json': 'fas fa-file-pen',
-  'properties': 'fas fa-file-pen'
+  'properties': 'fas fa-file-pen',
+
+  'txt': 'fas fa-file-lines',
+  'md': 'fas fa-file-lines'
 }
 
 const isTextFile = (type: string): boolean => {
   return type != 'jar'
 }
 
+const nonPreviewProps = {
+  disabled: 'true',
+  baseColor: 'grey-darken-2'
+}
+
 interface FileTreeElement {
   title: string
   path: string
+  props?: {
+    [key: string]: string
+  }
 }
 
 interface File extends FileTreeElement {
@@ -42,6 +53,7 @@ const createFile = (name: string, path: string): File => {
       title: name,
       path: path,
       file: type,
+      props: isTextFile(type) ? undefined : nonPreviewProps
     }
   }
   return {
