@@ -183,7 +183,7 @@ watch(() => props.template, (newTemplate) => {
     </v-toolbar>
     <v-container class="fill-height overflow-auto" fluid>
       <v-row class="fill-height overflow-auto">
-        <v-col cols="4" class="fill-height overflow-auto">
+        <v-col md="4" cols="12" class="fill-height overflow-auto">
           <div class="text-center text-h6 border-surface-light border-lg">{{ props.zipName }}</div>
           <v-treeview
             :items="treeItems"
@@ -204,7 +204,7 @@ watch(() => props.template, (newTemplate) => {
             </template>
           </v-treeview>
         </v-col>
-        <v-col cols="8" class="fill-height overflow-auto">
+        <v-col md="8" cols="12" class="fill-height overflow-auto">
           <div v-if="codeDisplayState != undefined" class="elevation-5">
             <v-toolbar class="bg-surface-variant" density="compact" rounded elevation=6>
               <v-toolbar-title>{{ codeDisplayState.name }}</v-toolbar-title>
