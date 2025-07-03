@@ -215,7 +215,7 @@ watch(() => props.template, (newTemplate) => {
                 ><v-icon icon="fas fa-copy"/></v-btn>
               </v-toolbar-items>
             </v-toolbar>
-            <pre><highlightjs :language="codeDisplayState.extension" :code="codeDisplayState.content" /></pre>
+            <highlightjs :language="codeDisplayState.extension" :code="codeDisplayState.content" />
           </div>
           <div v-else class="text-center">
             <h3><i>Select a text file to preview it</i></h3>
