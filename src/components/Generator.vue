@@ -1,12 +1,13 @@
 <script setup lang="ts">
-import {onMounted, reactive, type Ref, ref} from "vue";
-import {generateTemplate} from "../generator/";
-import JSZip from "jszip";
-import {saveAs} from "file-saver";
+import {computed, onMounted, reactive, type Ref, ref} from "vue";
+import {type GeneratedTemplate, generateTemplate} from "../generator/";
 import templateInputs from "../generator/io-vite.ts";
 import {fetchMinecraftVersions, fetchVersions,} from "../generator/versions.ts";
 import {helpers, maxLength, minLength, required} from "@vuelidate/validators";
 import useVuelidate from "@vuelidate/core";
+import PreviewDialog from "./PreviewDialog.vue";
+import {saveAs} from "file-saver";
+import JSZip from "jszip";
 
 const mcVersions = ref<string[]>([]);
 
@@ -31,6 +32,7 @@ function computeModId(modName: string): string {
 }
 
 const automaticModId = ref(true)
+const previewTemplate = ref<GeneratedTemplate | undefined>()
 
 const onToggleModId = (value: boolean | null) => {
   if (value) {
@@ -60,15 +62,29 @@ async function generateToJSON() {
   );
 }
 
-async function downloadZip() {
+const zipName = computed(() => `${computeModId(state.modId)}-template-${state.minecraftVersion}.zip`)
+
+async function generateAndDownload() {
+  await downloadZip(await generateToJSON())
+}
+
+async function generateAndPreview() {
+  previewTemplate.value = await generateToJSON()
+}
+
+async function downloadGeneratedTemplate() {
+  await downloadZip(previewTemplate.value!!)
+}
+
+async function downloadZip(template: GeneratedTemplate) {
   const zip = new JSZip();
-  for (let [k, v] of Object.entries(await generateToJSON())) {
+  for (let [k, v] of Object.entries(template)) {
     zip.file(k, v);
   }
   await zip.generateAsync({ type: "blob" }).then((blob) => {
     saveAs(
       blob,
-      `${computeModId(state.modId)}-template-${state.minecraftVersion}.zip`,
+      zipName.value,
     );
   });
 }
@@ -96,11 +112,11 @@ const v$ = useVuelidate(validations, state)
 const errors: Ref<string[]> = ref([])
 const overlay = ref(false)
 
-const submit = async () => {
+const submit = async (generator: () => Promise<any>) => {
   const isCorrect = await v$.value.$validate()
   if (isCorrect) {
     overlay.value = true
-    await downloadZip()
+    await generator()
         .finally(() => overlay.value = false)
   } else {
     errors.value.push('Inputs are not valid!')
@@ -193,12 +209,26 @@ const submit = async () => {
       <br />
 
       <v-btn
+          prepend-icon="fas fa-magnifying-glass"
+          @click="submit(generateAndPreview)"
+          :color="v$.$invalid ? 'error' : 'secondary'"
+          rounded="lg"
+          class="mr-2"
+      >Preview Mod Project</v-btn>
+      <v-btn
           prepend-icon="fas fa-download"
-          @click="submit"
+          @click="submit(generateAndDownload)"
           :color="v$.$invalid ? 'error' : 'primary'"
           rounded="lg"
       >Download Mod Project</v-btn>
     </v-form>
+
+    <PreviewDialog
+      :template="previewTemplate"
+      :zip-name="zipName"
+      @close="previewTemplate = undefined"
+      @generate="downloadGeneratedTemplate"
+    />
   </div>
   <div v-else>
     <p>Loading Minecraft versions...</p>

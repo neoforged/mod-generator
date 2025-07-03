@@ -8,6 +8,12 @@ import {createVuetify} from "vuetify"
 
 import { aliases, fa } from 'vuetify/iconsets/fa'
 
+import { VTreeview } from 'vuetify/labs/VTreeview'
+
+import 'highlight.js/styles/atom-one-dark.min.css'
+import 'highlight.js/lib/common';
+import hljsVuePlugin from "@highlightjs/vue-plugin";
+
 const vuetify = createVuetify({
     icons: {
         defaultSet: 'fa',
@@ -15,9 +21,13 @@ const vuetify = createVuetify({
         sets: {
             fa,
         },
+    },
+    components: {
+        VTreeview
     }
 })
 
 const app = createApp(Generator);
 app.use(vuetify)
+app.use(hljsVuePlugin)
 app.mount("#mod-generator-app");
