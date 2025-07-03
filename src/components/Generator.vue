@@ -213,13 +213,14 @@ const submit = async (generator: () => Promise<any>) => {
           @click="submit(generateAndPreview)"
           :color="v$.$invalid ? 'error' : 'secondary'"
           rounded="lg"
-          class="mr-2"
+          class="ma-2"
       >Preview Mod Project</v-btn>
       <v-btn
           prepend-icon="fas fa-download"
           @click="submit(generateAndDownload)"
           :color="v$.$invalid ? 'error' : 'primary'"
           rounded="lg"
+          class="ma-2"
       >Download Mod Project</v-btn>
     </v-form>
 
