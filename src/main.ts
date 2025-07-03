@@ -30,9 +30,4 @@ const vuetify = createVuetify({
 const app = createApp(Generator);
 app.use(vuetify)
 app.use(hljsVuePlugin)
-
-const shadowHost = document.getElementById('mod-generator-app')!!
-const shadowRoot = shadowHost.attachShadow({ mode: 'open' })
-const shadowElement = document.createElement('div')
-app.mount(shadowElement)
-shadowRoot.appendChild(shadowElement)
+app.mount('#mod-generator-app')
