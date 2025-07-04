@@ -30,4 +30,17 @@ const vuetify = createVuetify({
 const app = createApp(Generator);
 app.use(vuetify)
 app.use(hljsVuePlugin)
-app.mount('#mod-generator-app')
+
+const container = document.querySelector('#mod-generator-app')!
+if (container.attributes.getNamedItem('shadow-attach')) {
+    const shadow = container.attachShadow({ mode: 'open' })
+    const mountPoint = document.createElement('div')
+
+    const templates = container.querySelectorAll('template')
+    templates.forEach(element => shadow.appendChild(element.cloneNode(true)))
+
+    app.mount(mountPoint)
+    shadow.appendChild(mountPoint)
+} else {
+    app.mount(container)
+}
