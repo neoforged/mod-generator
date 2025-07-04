@@ -48,8 +48,11 @@ jobs:
                 <p>
                     This page is based on mod-generator <a href="https://github.com/neoforged/mod-generator/pull/${{ github.event.pull_request.number }}">PR #${{ github.event.pull_request.number }}</a>
                 </p>
+            
+                {{ $css:= resources.Get "css/mod-generator.css" }}
+                <link rel="stylesheet" href="{{ $css.RelPermalink }}" />
 
-                <div id="mod-generator-app" shadow-attach>
+                <div id="mod-generator-app-shadow-root">
                   <template>
                     {{ $css:= resources.Get "css/mod-generator.css" }}
                     <link rel="stylesheet" href="{{ $css.RelPermalink }}" />

@@ -1,7 +1,7 @@
 import { createApp } from "vue";
 import Generator from "./components/Generator.vue";
 
-import 'vuetify/lib/styles/main.css'
+import 'vuetify/styles'
 import '@fortawesome/fontawesome-free/css/all.min.css'
 
 import {createVuetify} from "vuetify"
@@ -24,6 +24,9 @@ const vuetify = createVuetify({
     },
     components: {
         VTreeview
+    },
+    theme: {
+        defaultTheme: 'light'
     }
 })
 
@@ -32,15 +35,23 @@ app.use(vuetify)
 app.use(hljsVuePlugin)
 
 const container = document.querySelector('#mod-generator-app')!
-if (container.attributes.getNamedItem('shadow-attach')) {
-    const shadow = container.attachShadow({ mode: 'open' })
+if (container) {
+    app.mount(container)
+} else {
+    const shadowContainer = document.querySelector('#mod-generator-app-shadow-root')!
+    const shadow = shadowContainer.attachShadow({ mode: 'open' })
     const mountPoint = document.createElement('div')
 
-    const templates = container.querySelectorAll('template')
-    templates.forEach(element => shadow.appendChild(element.cloneNode(true)))
+    const templates = shadowContainer.querySelectorAll('template')
+    templates.forEach(element => shadow.appendChild(element.content.cloneNode(true)))
 
     app.mount(mountPoint)
     shadow.appendChild(mountPoint)
-} else {
-    app.mount(container)
+
+    const styleSheet = document.querySelector('#vuetify-theme-stylesheet')
+    if (styleSheet) {
+        styleSheet.parentElement?.removeChild(styleSheet)
+        // Move vuetify's runtime-generated style sheet to our shadow DOM component
+        shadow.appendChild(styleSheet.cloneNode(true))
+    }
 }
