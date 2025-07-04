@@ -56,7 +56,7 @@ jobs:
                   <template>
                     {{ $css:= resources.Get "css/mod-generator.css" }}
                     <link rel="stylesheet" href="{{ $css.RelPermalink }}" />
-                  <template>
+                  </template>
                 </div>
 
                 {{ $js:= resources.Get "js/mod-generator.js" }}
