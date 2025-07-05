@@ -210,15 +210,20 @@ const submit = async (generator: () => Promise<any>) => {
       />
       <br/>
 
-      <details>
-        <summary>Advanced Options</summary>
-        <br/>
-        <div style="margin-left: 1rem">
-          <input id="mixins" type="checkbox" v-model="state.mixins" style="width: 1rem; height: 1rem"/>
-          <label for="mixins" style="margin-left: 0.5rem"><b>Add mixin configuration</b></label>
-          <div style="margin-left: 2rem">Tick to add a mixin configuration to the generated project</div>
-        </div>
-      </details>
+      <v-expansion-panels theme="dark" static>
+        <v-expansion-panel>
+          <v-expansion-panel-title>Advanced Options</v-expansion-panel-title>
+          <v-expansion-panel-text>
+            <v-checkbox
+                v-model="state.mixins"
+                label="Add mixin configuration"
+                hint="Tick to add a mixin configuration to the generated project"
+                persistent-hint
+            />
+          </v-expansion-panel-text>
+        </v-expansion-panel>
+      </v-expansion-panels>
+
       <br />
 
       <v-btn

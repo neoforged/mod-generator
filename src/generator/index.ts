@@ -123,6 +123,8 @@ function generateInterpolated(
   }
   view.mods_toml_file = view.before_1_20_5 ? "mods.toml" : "neoforge.mods.toml";
 
+  view.java_version = view.before_1_20_5 ? 17 : 21;
+
   iterateGlob(inputs.interpolated, "interpolated/", (filePath, contents) => {
     const textContent = new TextDecoder().decode(contents);
     ret[filePath] = encodeUtf8(
