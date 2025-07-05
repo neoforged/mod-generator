@@ -16,7 +16,8 @@ const state = reactive({
   modId: 'examplemod',
   packageName: 'com.example.examplemod',
   minecraftVersion: '',
-  gradlePlugin: 'ModDevGradle'
+  gradlePlugin: 'ModDevGradle',
+  mixins: false
 })
 
 onMounted(async () => {
@@ -54,11 +55,12 @@ async function generateToJSON() {
     minecraftVersion: state.minecraftVersion,
     useNeoGradle: state.gradlePlugin === "NeoGradle",
     chmodGradlewStep: true,
+    mixins: state.mixins
   };
   return generateTemplate(
-    templateInputs,
-    settings,
-    await fetchVersions(settings, () => new DOMParser(), mcVersions.value),
+      templateInputs,
+      settings,
+      await fetchVersions(settings, () => new DOMParser(), mcVersions.value),
   );
 }
 
@@ -81,10 +83,10 @@ async function downloadZip(template: GeneratedTemplate) {
   for (let [k, v] of Object.entries(template)) {
     zip.file(k, v);
   }
-  await zip.generateAsync({ type: "blob" }).then((blob) => {
+  await zip.generateAsync({type: "blob"}).then((blob) => {
     saveAs(
-      blob,
-      zipName.value,
+        blob,
+        zipName.value,
     );
   });
 }
@@ -134,7 +136,7 @@ const submit = async (generator: () => Promise<any>) => {
           size="64"
       />
     </v-overlay>
-    <v-snackbar-queue timeout="1000" color="error" v-model="errors" />
+    <v-snackbar-queue timeout="1000" color="error" v-model="errors"/>
     <v-form @submit.prevent>
       <v-text-field
           v-model="state.modName"
@@ -149,7 +151,7 @@ const submit = async (generator: () => Promise<any>) => {
           variant="outlined"
           class="rounded"
       />
-      <br />
+      <br/>
 
       <v-text-field
           v-model="state.modId"
@@ -182,7 +184,7 @@ const submit = async (generator: () => Promise<any>) => {
           @input="v$.packageName.$validate"
           variant="outlined"
       />
-      <br />
+      <br/>
 
       <v-select
           v-model="state.minecraftVersion"
@@ -194,7 +196,7 @@ const submit = async (generator: () => Promise<any>) => {
           variant="outlined"
           :menu-props="{scrollStrategy: 'none'}"
       />
-      <br />
+      <br/>
 
       <v-select
           v-model="state.gradlePlugin"
@@ -206,6 +208,22 @@ const submit = async (generator: () => Promise<any>) => {
           variant="outlined"
           :menu-props="{scrollStrategy: 'none'}"
       />
+      <br/>
+
+      <v-expansion-panels theme="dark" static>
+        <v-expansion-panel>
+          <v-expansion-panel-title>Advanced Options</v-expansion-panel-title>
+          <v-expansion-panel-text>
+            <v-checkbox
+                v-model="state.mixins"
+                label="Add mixin configuration"
+                hint="Tick to add a mixin configuration to the generated project"
+                persistent-hint
+            />
+          </v-expansion-panel-text>
+        </v-expansion-panel>
+      </v-expansion-panels>
+
       <br />
 
       <v-btn
@@ -214,21 +232,23 @@ const submit = async (generator: () => Promise<any>) => {
           :color="v$.$invalid ? 'error' : 'secondary'"
           rounded="lg"
           class="ma-2"
-      >Preview Mod Project</v-btn>
+      >Preview Mod Project
+      </v-btn>
       <v-btn
           prepend-icon="fas fa-download"
           @click="submit(generateAndDownload)"
           :color="v$.$invalid ? 'error' : 'primary'"
           rounded="lg"
           class="ma-2"
-      >Download Mod Project</v-btn>
+      >Download Mod Project
+      </v-btn>
     </v-form>
 
     <PreviewDialog
-      :template="previewTemplate"
-      :zip-name="zipName"
-      @close="previewTemplate = undefined"
-      @generate="downloadGeneratedTemplate"
+        :template="previewTemplate"
+        :zip-name="zipName"
+        @close="previewTemplate = undefined"
+        @generate="downloadGeneratedTemplate"
     />
   </div>
   <div v-else>

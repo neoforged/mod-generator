@@ -30,7 +30,7 @@ const isTextFile = (type: string): boolean => {
 }
 
 const nonPreviewProps = {
-  disabled: 'true',
+  disabled: true,
   baseColor: 'grey-darken-2'
 }
 
@@ -38,7 +38,7 @@ interface FileTreeElement {
   title: string
   path: string
   props?: {
-    [key: string]: string
+    [key: string]: any
   }
 }
 
