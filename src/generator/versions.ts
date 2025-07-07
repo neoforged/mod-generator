@@ -36,7 +36,6 @@ export interface ComputedVersions {
   parchmentMappingsVersion: string;
   minecraftVersionRange: string;
   neoForgeVersion: string;
-  neoForgeVersionRange: string;
   loaderVersionRange: string;
 }
 
@@ -73,7 +72,6 @@ export async function fetchVersions(
     parchmentMappingsVersion: versions[1].parchmentMappingsVersion,
     minecraftVersionRange: `[${settings.minecraftVersion}]`,
     neoForgeVersion: versions[2],
-    neoForgeVersionRange: `[${versions[2]},)`,
     // TODO: this is kinda useless, shouldn't we remove it altogether?
     loaderVersionRange: `[1,)`,
   };
