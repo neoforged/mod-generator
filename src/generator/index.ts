@@ -98,7 +98,6 @@ function generateInterpolated(
     minecraft_version: settings.minecraftVersion,
     minecraft_version_range: versions.minecraftVersionRange,
     neo_version: versions.neoForgeVersion,
-    neo_version_range: versions.neoForgeVersionRange,
     loader_version_range: versions.loaderVersionRange,
     mod_id: settings.modId,
     mod_name: settings.modName,

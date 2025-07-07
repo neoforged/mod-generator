@@ -99,7 +99,6 @@ tasks.withType(ProcessResources).configureEach {
             minecraft_version      : minecraft_version,
             minecraft_version_range: minecraft_version_range,
             neo_version            : neo_version,
-            neo_version_range      : neo_version_range,
 {{ #before_1_21_5 }}
             loader_version_range   : loader_version_range,
 {{ /before_1_21_5 }}
