@@ -48,7 +48,7 @@ export async function fetchVersions(
   minecraftVersions?: string[],
 ): Promise<ComputedVersions> {
   const mcVersion = parseMinecraftVersion(settings.minecraftVersion);
-  const neoForgePrefix = `${mcVersion.minor}.${mcVersion.patch}`;
+  const neoForgePrefix = `${mcVersion.minor}.${mcVersion.patch}.`;
 
   if (!minecraftVersions) {
     minecraftVersions = await fetchMinecraftVersions();
