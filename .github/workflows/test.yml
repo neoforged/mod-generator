@@ -11,7 +11,7 @@ jobs:
       max-parallel: 5
       matrix:
         gradle-plugin: ['mdg', 'ng']
-        minecraft-version: ['1.20.4', '1.20.6', '1.21.1', '1.21.4', '1.21.5']
+        minecraft-version: ['1.20.4', '1.20.6', '1.21.1', '1.21.4', '1.21.5', '1.21.11']
 
     steps:
       - uses: actions/checkout@v4
