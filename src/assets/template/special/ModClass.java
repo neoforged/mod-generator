@@ -59,11 +59,17 @@ public class {{ mod_class_name }} {
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
 
     // Creates a new Block with the id "{{ mod_id }}:example_block", combining the namespace and path
+{{ #before_1_21_10 }}
     public static final DeferredBlock<Block> EXAMPLE_BLOCK = BLOCKS.registerSimpleBlock("example_block", BlockBehaviour.Properties.of().mapColor(MapColor.STONE));
+{{ /before_1_21_10 }}
+{{ #from_1_21_10 }}
+    public static final DeferredBlock<Block> EXAMPLE_BLOCK = BLOCKS.registerSimpleBlock("example_block", p -> p.mapColor(MapColor.STONE));
+{{ /from_1_21_10 }}
     // Creates a new BlockItem with the id "{{ mod_id }}:example_block", combining the namespace and path
     public static final DeferredItem<BlockItem> EXAMPLE_BLOCK_ITEM = ITEMS.registerSimpleBlockItem("example_block", EXAMPLE_BLOCK);
 
     // Creates a new food item with the id "{{ mod_id }}:example_id", nutrition 1 and saturation 2
+{{ #before_1_21_10 }}
     public static final DeferredItem<Item> EXAMPLE_ITEM = ITEMS.registerSimpleItem("example_item", new Item.Properties().food(new FoodProperties.Builder()
 {{ #before_1_20_5 }}
             .alwaysEat().nutrition(1).saturationMod(2f).build()));
@@ -71,6 +77,11 @@ public class {{ mod_class_name }} {
 {{ #from_1_20_5 }}
             .alwaysEdible().nutrition(1).saturationModifier(2f).build()));
 {{ /from_1_20_5 }}
+{{ /before_1_21_10 }}
+{{ #from_1_21_10 }}
+    public static final DeferredItem<Item> EXAMPLE_ITEM = ITEMS.registerSimpleItem("example_item", p -> p.food(new FoodProperties.Builder()
+            .alwaysEdible().nutrition(1).saturationModifier(2f).build()));
+{{ /from_1_21_10 }}
 
     // Creates a creative tab with the id "{{ mod_id }}:example_tab" for the example item, that is placed after the combat tab
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> EXAMPLE_TAB = CREATIVE_MODE_TABS.register("example_tab", () -> CreativeModeTab.builder()
