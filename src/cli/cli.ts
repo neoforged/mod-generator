@@ -15,6 +15,8 @@ program
   .command("generate")
   .requiredOption("--mod-name <string>", "name of the mod")
   .requiredOption("--mod-id <string>", "id of the mod")
+  .option("--mod-authors <string>", "authors of the mod")
+  .option("--mod-description <string>", "description of the mod")
   .requiredOption("--package-name <string>", "package name")
   .requiredOption("--minecraft-version <string>", "minecraft version")
   .requiredOption("--output-folder <string>", "output folder")
@@ -40,6 +42,8 @@ program
     const {
       modName,
       modId,
+      modAuthors,
+      modDescription,
       packageName,
       minecraftVersion,
       outputFolder,
@@ -55,6 +59,8 @@ program
     const settings = {
       modName,
       modId,
+      modAuthors,
+      modDescription,
       packageName,
       minecraftVersion,
       useNeoGradle: gradlePlugin === "ng" || gradlePlugin === "neogradle",
