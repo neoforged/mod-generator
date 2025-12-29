@@ -52,7 +52,9 @@ authors="{{ mod_authors }}"
 {{ /has_authors }}
 
 # The description text for the mod (multi line!) (#mandatory)
-description='''{{ mod_description }}'''
+description='''
+{{ mod_description }}
+'''
 
 # The [[mixins]] block allows you to declare your mixin config to FML so that it gets loaded.
 {{ #mixins }}
