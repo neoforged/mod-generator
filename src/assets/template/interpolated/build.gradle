@@ -105,9 +105,7 @@ tasks.withType(ProcessResources).configureEach {
             mod_id                 : mod_id,
             mod_name               : mod_name,
             mod_license            : mod_license,
-            mod_version            : mod_version,
-            mod_authors            : mod_authors,
-            mod_description        : mod_description
+            mod_version            : mod_version
     ]
     inputs.properties replaceProperties
 {{ #use_mdg }}

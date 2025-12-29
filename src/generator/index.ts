@@ -4,6 +4,8 @@ import type { ComputedVersions } from "./versions.ts";
 export interface Settings {
   modName: string;
   modId: string;
+  modAuthors?: string;
+  modDescription?: string;
   packageName: string;
   minecraftVersion: string;
   useNeoGradle: boolean;
@@ -101,6 +103,9 @@ function generateInterpolated(
     loader_version_range: versions.loaderVersionRange,
     mod_id: settings.modId,
     mod_name: settings.modName,
+    mod_authors: settings.modAuthors,
+    has_authors: settings.modAuthors?.length ?? 0 > 0,
+    mod_description: settings.modDescription ?? 'Example mod description.',
     mod_group_id: settings.packageName,
     package_name: settings.packageName,
     mod_class_name: modClassName,
