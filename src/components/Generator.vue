@@ -14,6 +14,8 @@ const mcVersions = ref<string[]>([]);
 const state = reactive({
   modName: 'Example Mod',
   modId: 'examplemod',
+  modAuthors: null,
+  modDescription: null,
   packageName: 'com.example.examplemod',
   minecraftVersion: '',
   gradlePlugin: 'ModDevGradle',
@@ -51,6 +53,8 @@ async function generateToJSON() {
   const settings = {
     modName: state.modName,
     modId: state.modId,
+    modAuthors: state.modAuthors,
+    modDescription: state.modDescription,
     packageName: state.packageName,
     minecraftVersion: state.minecraftVersion,
     useNeoGradle: state.gradlePlugin === "NeoGradle",
@@ -208,6 +212,30 @@ const submit = async (generator: () => Promise<any>) => {
           variant="outlined"
           :menu-props="{scrollStrategy: 'none'}"
       />
+      <br/>
+
+      <v-expansion-panels theme="dark" static>
+        <v-expansion-panel>
+          <v-expansion-panel-title>Mod Metadata</v-expansion-panel-title>
+          <v-expansion-panel-text>
+            <v-text-field
+                v-model="state.modAuthors"
+                label="Mod Authors"
+                hint="The authors of your mod"
+                persistent-hint
+                variant="outlined"
+            />
+            <br/>
+            <v-textarea
+                v-model="state.modDescription"
+                label="Mod Description"
+                hint="The description  of your mod"
+                persistent-hint
+                variant="outlined"
+            />
+          </v-expansion-panel-text>
+        </v-expansion-panel>
+      </v-expansion-panels>
       <br/>
 
       <v-expansion-panels theme="dark" static>
