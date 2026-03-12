@@ -25,7 +25,7 @@ group = mod_group_id
 // Exclude common development only resources from finalized outputs
 sourceSets.main.resources {
     exclude("**/*.bbmodel") // BlockBench project files
-    exclude("src/generates/**/.cache") // datagen cache files
+    exclude("src/generated/**/.cache") // datagen cache files
 }
 
 repositories {
