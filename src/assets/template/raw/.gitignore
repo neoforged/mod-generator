@@ -44,3 +44,4 @@ bin/
 
 ### Minecraft Modding ###
 run
+**/src/generated/**/.cache/
