@@ -22,6 +22,12 @@ tasks.named('wrapper', Wrapper).configure {
 version = mod_version
 group = mod_group_id
 
+// Exclude common development only resources from finalized outputs
+sourceSets.main.resources {
+    exclude("**/*.bbmodel") // BlockBench project files
+    exclude("src/generates/**/.cache") // datagen cache files
+}
+
 repositories {
     // Add here additional repositories if required by some of the dependencies below.
 }
