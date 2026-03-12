@@ -2,8 +2,7 @@
 .gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar
-!**/src/main/**/build/
-!**/src/test/**/build/
+!**/src/**/build/
 
 ### IntelliJ IDEA ###
 .idea/
@@ -11,8 +10,7 @@ build/
 *.iml
 *.ipr
 out/
-!**/src/main/**/out/
-!**/src/test/**/out/
+!**/src/**/out/
 
 .run/
 
@@ -26,8 +24,7 @@ out/
 .springBeans
 .sts4-cache
 bin/
-!**/src/main/**/bin/
-!**/src/test/**/bin/
+!**/src/**/bin/
 
 ### NetBeans ###
 /nbproject/private/
