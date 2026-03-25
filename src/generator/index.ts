@@ -105,12 +105,12 @@ function generateInterpolated(
     mod_name: settings.modName,
     mod_authors: settings.modAuthors,
     has_authors: settings.modAuthors?.length ?? 0 > 0,
-    mod_description: settings.modDescription ?? 'Example mod description.',
+    mod_description: settings.modDescription ?? "Example mod description.",
     mod_group_id: settings.packageName,
     package_name: settings.packageName,
     mod_class_name: modClassName,
     chmod_gradlew_step: settings.chmodGradlewStep,
-    mixins: settings.mixins
+    mixins: settings.mixins,
   };
   const partials: Record<string, any> = {
     mdg_block_gradle,
@@ -127,7 +127,7 @@ function generateInterpolated(
   }
   view.mods_toml_file = view.before_1_20_5 ? "mods.toml" : "neoforge.mods.toml";
 
-  view.java_version = view.before_1_20_5 ? 17 : 21;
+  view.java_version = view.before_26_1 ? view.before_1_20_5 ? 17 : 21 : 25;
 
   iterateGlob(inputs.interpolated, "interpolated/", (filePath, contents) => {
     const textContent = new TextDecoder().decode(contents);
@@ -151,14 +151,15 @@ function generateInterpolated(
     interpolateTemplate(ModClass_java, view),
   );
   if (view.from_1_21_1) {
-      ret[`${javaFolder}/${modClassName}Client.java`] = encodeUtf8(
-        interpolateTemplate(ModClassClient_java, view),
-      );
+    ret[`${javaFolder}/${modClassName}Client.java`] = encodeUtf8(
+      interpolateTemplate(ModClassClient_java, view),
+    );
   }
 
   if (settings.mixins) {
-    ret[`src/main/resources/${settings.modId}.mixins.json`] =
-      encodeUtf8(interpolateTemplate(mixins_json, view))
+    ret[`src/main/resources/${settings.modId}.mixins.json`] = encodeUtf8(
+      interpolateTemplate(mixins_json, view),
+    );
   }
 
   return ret;
