@@ -22,8 +22,10 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
+{{ ^disableComments }}
 // An example config class. This is not required, but it's a good idea to have one to keep your config organized.
 // Demonstrates how to use Neo's config APIs
+{{ /disableComments }}
 public class Config {
     private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
 
@@ -40,13 +42,17 @@ public class Config {
             .define("magicNumberIntroduction", "The magic number is... ");
 
 {{ #before_1_21 }}
+{{ ^disableComments }}
     // a list of strings that are treated as resource locations for items
+{{ /disableComments }}
     public static final ModConfigSpec.ConfigValue<List<? extends String>> ITEM_STRINGS = BUILDER
             .comment("A list of items to log on common setup.")
             .defineListAllowEmpty("items", List.of("minecraft:iron_ingot"), Config::validateItemName);
 {{ /before_1_21 }}
 {{ #from_1_21 }}
+{{ ^disableComments }}
     // a list of strings that are treated as resource locations for items
+{{ /disableComments }}
     public static final ModConfigSpec.ConfigValue<List<? extends String>> ITEM_STRINGS = BUILDER
             .comment("A list of items to log on common setup.")
             .defineListAllowEmpty("items", List.of("minecraft:iron_ingot"), () -> "", Config::validateItemName);

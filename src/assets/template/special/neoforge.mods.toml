@@ -1,49 +1,77 @@
+{{ ^disableComments }}
 # This is an example {{ mods_toml_file }} file. It contains the data relating to the loading mods.
 # There are several mandatory fields (#mandatory), and many more that are optional (#optional).
 # The overall format is standard TOML format, v0.5.0.
 # Note that there are a couple of TOML lists in this file.
 # Find more information on toml format here:  https://github.com/toml-lang/toml
+{{ /disableComments }}
 
 {{ #before_1_21_5 }}
+{{ ^disableComments }}
 # The name of the mod loader type to load - for regular FML @Mod mods it should be javafml
+{{ /disableComments }}
 modLoader="javafml" #mandatory
 
+{{ ^disableComments }}
 # A version range to match for said mod loader - for regular FML @Mod it will be the FML version. This is currently 2.
+{{ /disableComments }}
 loaderVersion="${loader_version_range}" #mandatory
 
 {{ /before_1_21_5 }}
+{{ ^disableComments }}
 # The license for you mod. This is mandatory metadata and allows for easier comprehension of your redistributive properties.
 # Review your options at https://choosealicense.com/. All rights reserved is the default copyright stance, and is thus the default here.
+{{ /disableComments }}
 license="${mod_license}"
 
+{{ ^disableComments }}
 # A URL to refer people to when problems occur with this mod
+{{ /disableComments }}
 #issueTrackerURL="https://change.me.to.your.issue.tracker.example.invalid/" #optional
 
+{{ ^disableComments }}
 # A list of mods - how many allowed here is determined by the individual mod loader
+{{ /disableComments }}
 [[mods]] #mandatory
 
+{{ ^disableComments }}
 # The modid of the mod
+{{ /disableComments }}
 modId="${mod_id}" #mandatory
 
+{{ ^disableComments }}
 # The version number of the mod
+{{ /disableComments }}
 version="${mod_version}" #mandatory
 
+{{ ^disableComments }}
 # A display name for the mod
+{{ /disableComments }}
 displayName="${mod_name}" #mandatory
 
+{{ ^disableComments }}
 # A URL to query for updates for this mod. See the JSON update specification https://docs.neoforged.net/docs/misc/updatechecker/
+{{ /disableComments }}
 #updateJSONURL="https://change.me.example.invalid/updates.json" #optional
 
+{{ ^disableComments }}
 # A URL for the "homepage" for this mod, displayed in the mod UI
+{{ /disableComments }}
 #displayURL="https://change.me.to.your.mods.homepage.example.invalid/" #optional
 
+{{ ^disableComments }}
 # A file name (in the root of the mod JAR) containing a logo for display
+{{ /disableComments }}
 #logoFile="examplemod.png" #optional
 
+{{ ^disableComments }}
 # A text field displayed in the mod UI
+{{ /disableComments }}
 #credits="" #optional
 
+{{ ^disableComments }}
 # The authors of the mod, displayed in the mod UI (optional)
+{{ /disableComments }}
 {{ #has_authors }}
 authors="{{ mod_authors }}"
 {{ /has_authors }}
@@ -51,12 +79,16 @@ authors="{{ mod_authors }}"
 #authors=""
 {{ /has_authors }}
 
+{{ ^disableComments }}
 # The description text for the mod (multi line!) (#mandatory)
+{{ /disableComments }}
 description='''
 {{ mod_description }}
 '''
 
+{{ ^disableComments }}
 # The [[mixins]] block allows you to declare your mixin config to FML so that it gets loaded.
+{{ /disableComments }}
 {{ #mixins }}
 [[mixins]]
 config="${mod_id}.mixins.json"
@@ -66,43 +98,63 @@ config="${mod_id}.mixins.json"
 #config="${mod_id}.mixins.json"
 {{ /mixins }}
 
+{{ ^disableComments }}
 # The [[accessTransformers]] block allows you to declare where your AT file is.
 # If this block is omitted, a fallback attempt will be made to load an AT from META-INF/accesstransformer.cfg
+{{ /disableComments }}
 #[[accessTransformers]]
 #file="META-INF/accesstransformer.cfg"
 
 # The coremods config file path is not configurable and is always loaded from META-INF/coremods.json
 
+{{ ^disableComments }}
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
+{{ /disableComments }}
 [[dependencies.${mod_id}]] #optional
+{{ ^disableComments }}
     # the modid of the dependency
+{{ /disableComments }}
     modId="neoforge" #mandatory
+{{ ^disableComments }}
     # The type of the dependency. Can be one of "required", "optional", "incompatible" or "discouraged" (case insensitive).
     # 'required' requires the mod to exist, 'optional' does not
     # 'incompatible' will prevent the game from loading when the mod exists, and 'discouraged' will show a warning
+{{ /disableComments }}
     type="required" #mandatory
+{{ ^disableComments }}
     # Optional field describing why the dependency is required or why it is incompatible
     # reason="..."
     # The version range of the dependency
+{{ /disableComments }}
     versionRange="[${neo_version},)" #mandatory
+{{ ^disableComments }}
     # An ordering relationship for the dependency.
     # BEFORE - This mod is loaded BEFORE the dependency
     # AFTER - This mod is loaded AFTER the dependency
+{{ /disableComments }}
     ordering="NONE"
+{{ ^disableComments }}
     # Side this dependency is applied on - BOTH, CLIENT, or SERVER
+{{ /disableComments }}
     side="BOTH"
 
+{{ ^disableComments }}
 # Here's another dependency
+{{ /disableComments }}
 [[dependencies.${mod_id}]]
     modId="minecraft"
     type="required"
+{{ ^disableComments }}
     # This version range declares a minimum of the current minecraft version up to but not including the next major version
+{{ /disableComments }}
     versionRange="${minecraft_version_range}"
     ordering="NONE"
     side="BOTH"
 
+{{ ^disableComments }}
 # Features are specific properties of the game environment, that you may want to declare you require. This example declares
 # that your mod requires GL version 3.2 or higher. Other features will be added. They are side aware so declaring this won't
 # stop your mod loading on the server for example.
+{{ /disableComments }}
 #[features.${mod_id}]
 #openGLVersion="[3.2,)"

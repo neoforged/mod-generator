@@ -11,6 +11,7 @@ export interface Settings {
   useNeoGradle: boolean;
   chmodGradlewStep: boolean;
   mixins: boolean;
+  disableComments: boolean;
 }
 
 /**
@@ -111,6 +112,7 @@ function generateInterpolated(
     mod_class_name: modClassName,
     chmod_gradlew_step: settings.chmodGradlewStep,
     mixins: settings.mixins,
+    disableComments: settings.disableComments,
   };
   const partials: Record<string, any> = {
     mdg_block_gradle,

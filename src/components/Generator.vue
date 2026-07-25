@@ -19,7 +19,8 @@ const state = reactive({
   packageName: 'com.example.examplemod',
   minecraftVersion: '',
   gradlePlugin: 'ModDevGradle',
-  mixins: false
+  mixins: false,
+  disableComments: false
 })
 
 onMounted(async () => {
@@ -59,7 +60,8 @@ async function generateToJSON() {
     minecraftVersion: state.minecraftVersion,
     useNeoGradle: state.gradlePlugin === "NeoGradle",
     chmodGradlewStep: true,
-    mixins: state.mixins
+    mixins: state.mixins,
+    disableComments: state.disableComments
   };
   return generateTemplate(
       templateInputs,
@@ -246,6 +248,12 @@ const submit = async (generator: () => Promise<any>) => {
                 v-model="state.mixins"
                 label="Add mixin configuration"
                 hint="Tick to add a mixin configuration to the generated project"
+                persistent-hint
+            />
+            <v-checkbox
+                v-model="state.disableComments"
+                label="Disable explanation comments in files"
+                hint="Tick to disable explanation comments in the generated project"
                 persistent-hint
             />
           </v-expansion-panel-text>

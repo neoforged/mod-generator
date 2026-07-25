@@ -1,10 +1,14 @@
+{{ ^disableComments }}
 ### Gradle ###
+{{ /disableComments }}
 .gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/**/build/
 
+{{ ^disableComments }}
 ### IntelliJ IDEA ###
+{{ /disableComments }}
 .idea/
 *.iws
 *.iml
@@ -14,7 +18,9 @@ out/
 
 .run/
 
+{{ ^disableComments }}
 ### Eclipse ###
+{{ /disableComments }}
 .apt_generated
 .classpath
 .eclipse/
@@ -26,13 +32,19 @@ out/
 bin/
 !**/src/**/bin/
 
+{{ ^disableComments }}
 ### VS Code ###
+{{ /disableComments }}
 .vscode/
 
+{{ ^disableComments }}
 ### Mac OS ###
+{{ /disableComments }}
 .DS_Store
 
+{{ ^disableComments }}
 ### Minecraft Modding ###
+{{ /disableComments }}
 run/
 !**/src/**/run/
 **/src/generated/**/.cache/

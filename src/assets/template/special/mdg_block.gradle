@@ -1,5 +1,7 @@
 neoForge {
+    {{ ^disableComments }}
     // Specify the version of NeoForge to use.
+    {{ /disableComments }}
     version = project.neo_version
 
 {{ #before_26_1 }}
@@ -8,17 +10,20 @@ neoForge {
         minecraftVersion = project.parchment_minecraft_version
     }
 
-{{ /before_26_1 }}
+{{ /before_26_1 }} 
+    {{ ^disableComments }}
     // This line is optional. Access Transformers are automatically detected
     // accessTransformers = project.files('src/main/resources/META-INF/accesstransformer.cfg')
 
     // Default run configurations.
     // These can be tweaked, removed, or duplicated as needed.
+    {{ /disableComments }}
     runs {
         client {
             client()
-
+            {{ ^disableComments }}
             // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
+            {{ /disableComments }}
             systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
         }
 
@@ -27,10 +32,11 @@ neoForge {
             programArgument '--nogui'
             systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
         }
-
+        {{ ^disableComments }}
         // This run config launches GameTestServer and runs all registered gametests, then exits.
         // By default, the server will crash when no gametests are provided.
         // The gametest system is also enabled by default for other run configs under the /test command.
+        {{ /disableComments }}
         gameTestServer {
             type = "gameTestServer"
             systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
@@ -43,34 +49,43 @@ neoForge {
 {{ #from_1_21_4 }}
             clientData()
 {{ /from_1_21_4 }}
-
+            {{ ^disableComments }}
             // example of overriding the workingDirectory set in configureEach above, uncomment if you want to use it
             // gameDirectory = project.file('run-data')
 
             // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
+            {{ /disableComments }}
             programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
         }
 
+        {{ ^disableComments }}
         // applies to all the run configs above
+        {{ /disableComments }}
         configureEach {
+            {{ ^disableComments }}
             // Recommended logging data for a userdev environment
             // The markers can be added/remove as needed separated by commas.
             // "SCAN": For mods scan.
             // "REGISTRIES": For firing of registry events.
             // "REGISTRYDUMP": For getting the contents of all registries.
+            {{ /disableComments }}
             systemProperty 'forge.logging.markers', 'REGISTRIES'
 
+            {{ ^disableComments }}
             // Recommended logging level for the console
             // You can set various levels here.
             // Please read: https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels
+            {{ /disableComments }}
             logLevel = org.slf4j.event.Level.DEBUG
         }
     }
 
     mods {
+        {{ ^disableComments }}
         // define mod <-> source bindings
         // these are used to tell the game which sources are for which mod
         // multi mod projects should define one per mod
+        {{ /disableComments }}
         "${mod_id}" {
             sourceSet(sourceSets.main)
         }
