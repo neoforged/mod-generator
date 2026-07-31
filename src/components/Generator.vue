@@ -20,7 +20,8 @@ const state = reactive({
   minecraftVersion: '',
   gradlePlugin: 'ModDevGradle',
   mixins: false,
-  disableComments: false
+  disableComments: false,
+  minimal: false
 })
 
 onMounted(async () => {
@@ -61,7 +62,8 @@ async function generateToJSON() {
     useNeoGradle: state.gradlePlugin === "NeoGradle",
     chmodGradlewStep: true,
     mixins: state.mixins,
-    disableComments: state.disableComments
+    disableComments: state.disableComments,
+    minimal: state.minimal
   };
   return generateTemplate(
       templateInputs,
@@ -254,6 +256,12 @@ const submit = async (generator: () => Promise<any>) => {
                 v-model="state.disableComments"
                 label="Disable explanation comments in files"
                 hint="Tick to disable explanation comments in the generated project"
+                persistent-hint
+            />
+            <v-checkbox
+                v-model="state.minimal"
+                label="Minimize"
+                hint="Tick to minimize the generated project, leaves only build files and minimum amounts of source code"
                 persistent-hint
             />
           </v-expansion-panel-text>

@@ -37,10 +37,12 @@ neoForge {
         // By default, the server will crash when no gametests are provided.
         // The gametest system is also enabled by default for other run configs under the /test command.
         {{ /disableComments }}
+        {{ ^minimal }}
         gameTestServer {
             type = "gameTestServer"
             systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
         }
+        {{ /minimal }}
 
         data {
 {{ #before_1_21_4 }}
@@ -70,8 +72,8 @@ neoForge {
             // "REGISTRYDUMP": For getting the contents of all registries.
             {{ /disableComments }}
             systemProperty 'forge.logging.markers', 'REGISTRIES'
-
             {{ ^disableComments }}
+
             // Recommended logging level for the console
             // You can set various levels here.
             // Please read: https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels

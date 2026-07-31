@@ -12,6 +12,7 @@ export interface Settings {
   chmodGradlewStep: boolean;
   mixins: boolean;
   disableComments: boolean;
+  minimal: boolean;
 }
 
 /**
@@ -79,10 +80,12 @@ import en_us_json from "../assets/template/special/en_us.json?raw";
 import mixins_json from "../assets/template/special/mixins.json?raw";
 import Config_java from "../assets/template/special/Config.java?raw";
 import ModClass_java from "../assets/template/special/ModClass.java?raw";
+import ModClassMinimal_java from "../assets/template/special/ModClass.java_minimal?raw";
 import ModClassClient_java from "../assets/template/special/ModClassClient.java?raw";
 import mdg_block_gradle from "../assets/template/special/mdg_block.gradle?raw";
 import ng_block_gradle from "../assets/template/special/ng_block.gradle?raw";
 import neoforge_mods_toml from "../assets/template/special/neoforge.mods.toml?raw";
+import neoforge_mods_toml_minimal from "../assets/template/special/neoforge.mods.toml_minimal?raw";
 
 function generateInterpolated(
   inputs: TemplateInputs,
@@ -113,6 +116,8 @@ function generateInterpolated(
     chmod_gradlew_step: settings.chmodGradlewStep,
     mixins: settings.mixins,
     disableComments: settings.disableComments,
+    minimal: settings.minimal,
+    minimalNotNG: settings.minimal && !settings.useNeoGradle,
   };
   const partials: Record<string, any> = {
     mdg_block_gradle,
@@ -140,21 +145,29 @@ function generateInterpolated(
 
   ret[
     `src/main/${settings.useNeoGradle ? "resources" : "templates"}/META-INF/${view.mods_toml_file}`
-  ] = encodeUtf8(interpolateTemplate(neoforge_mods_toml, view));
-
-  ret[`src/main/resources/assets/${settings.modId}/lang/en_us.json`] =
-    encodeUtf8(interpolateTemplate(en_us_json, view));
+  ] = encodeUtf8(interpolateTemplate(settings.minimal ? neoforge_mods_toml_minimal : neoforge_mods_toml, view));
 
   const javaFolder = `src/main/java/${settings.packageName.replace(/\./g, "/")}`;
-  ret[`${javaFolder}/Config.java`] = encodeUtf8(
-    interpolateTemplate(Config_java, view),
-  );
-  ret[`${javaFolder}/${modClassName}.java`] = encodeUtf8(
-    interpolateTemplate(ModClass_java, view),
-  );
-  if (view.from_1_21_1) {
-    ret[`${javaFolder}/${modClassName}Client.java`] = encodeUtf8(
-      interpolateTemplate(ModClassClient_java, view),
+  if (!settings.minimal) {
+    ret[`src/main/resources/assets/${settings.modId}/lang/en_us.json`] =
+      encodeUtf8(interpolateTemplate(en_us_json, view));
+
+    ret[`${javaFolder}/Config.java`] = encodeUtf8(
+      interpolateTemplate(Config_java, view),
+    );
+
+    if (view.from_1_21_1) {
+      ret[`${javaFolder}/${modClassName}Client.java`] = encodeUtf8(
+        interpolateTemplate(ModClassClient_java, view),
+      );
+    }
+
+    ret[`${javaFolder}/${modClassName}.java`] = encodeUtf8(
+      interpolateTemplate(ModClass_java, view),
+    );
+  } else {
+    ret[`${javaFolder}/${modClassName}.java`] = encodeUtf8(
+      interpolateTemplate(ModClassMinimal_java, view),
     );
   }
 
