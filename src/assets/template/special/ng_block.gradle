@@ -48,11 +48,9 @@ runs {
     // By default, the server will crash when no gametests are provided.
     // The gametest system is also enabled by default for other run configs under the /test command.
     {{ /disableComments }}
-    {{ ^minimal }}
     gameTestServer {
         systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
     }
-    {{ /minimal }}
 
 {{ #before_1_21_4 }}
     data {

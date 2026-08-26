@@ -23,11 +23,13 @@ loaderVersion="${loader_version_range}" #mandatory
 # Review your options at https://choosealicense.com/. All rights reserved is the default copyright stance, and is thus the default here.
 {{ /disableComments }}
 license="${mod_license}"
+{{ ^minimal }}
 
 {{ ^disableComments }}
 # A URL to refer people to when problems occur with this mod
 {{ /disableComments }}
 #issueTrackerURL="https://change.me.to.your.issue.tracker.example.invalid/" #optional
+{{ /minimal}}
 
 {{ ^disableComments }}
 # A list of mods - how many allowed here is determined by the individual mod loader
@@ -48,6 +50,7 @@ version="${mod_version}" #mandatory
 # A display name for the mod
 {{ /disableComments }}
 displayName="${mod_name}" #mandatory
+{{ ^minimal }}
 
 {{ ^disableComments }}
 # A URL to query for updates for this mod. See the JSON update specification https://docs.neoforged.net/docs/misc/updatechecker/
@@ -68,6 +71,7 @@ displayName="${mod_name}" #mandatory
 # A text field displayed in the mod UI
 {{ /disableComments }}
 #credits="" #optional
+{{ /minimal }}
 
 {{ ^disableComments }}
 # The authors of the mod, displayed in the mod UI (optional)
@@ -104,8 +108,6 @@ config="${mod_id}.mixins.json"
 {{ /disableComments }}
 #[[accessTransformers]]
 #file="META-INF/accesstransformer.cfg"
-
-# The coremods config file path is not configurable and is always loaded from META-INF/coremods.json
 
 {{ ^disableComments }}
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
@@ -150,6 +152,7 @@ config="${mod_id}.mixins.json"
     versionRange="${minecraft_version_range}"
     ordering="NONE"
     side="BOTH"
+{{ ^minimal }}
 
 {{ ^disableComments }}
 # Features are specific properties of the game environment, that you may want to declare you require. This example declares
@@ -158,3 +161,4 @@ config="${mod_id}.mixins.json"
 {{ /disableComments }}
 #[features.${mod_id}]
 #openGLVersion="[3.2,)"
+{{ /minimal }}

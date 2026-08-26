@@ -38,6 +38,8 @@ program
       .choices(["no", "workflow-step"]),
   )
   .option("--mixins", "Add a mixin config to the generated mod", false)
+  .option("--disable-comments", "Disable explanation comments in files", false)
+  .option("--minimal", "Minimize the amount of code in the generated project", false)
   .action(async (options) => {
     const {
       modName,
@@ -49,7 +51,9 @@ program
       outputFolder,
       gradlePlugin,
       executableGradlew,
-      mixins
+      mixins,
+      disableComments,
+      minimal,
     } = options;
 
     const templatesFolder = fileURLToPath(
@@ -65,7 +69,9 @@ program
       minecraftVersion,
       useNeoGradle: gradlePlugin === "ng" || gradlePlugin === "neogradle",
       chmodGradlewStep: executableGradlew === "workflow-step",
-      mixins: mixins
+      mixins: mixins,
+      disableComments: disableComments,
+      minimal: minimal,
     };
     const result = await generateTemplate(
       templateInputs,

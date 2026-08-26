@@ -21,7 +21,7 @@ const state = reactive({
   gradlePlugin: 'ModDevGradle',
   mixins: false,
   disableComments: false,
-  minimal: false
+  minimal: false,
 })
 
 onMounted(async () => {
@@ -63,7 +63,7 @@ async function generateToJSON() {
     chmodGradlewStep: true,
     mixins: state.mixins,
     disableComments: state.disableComments,
-    minimal: state.minimal
+    minimal: state.minimal,
   };
   return generateTemplate(
       templateInputs,
@@ -260,8 +260,8 @@ const submit = async (generator: () => Promise<any>) => {
             />
             <v-checkbox
                 v-model="state.minimal"
-                label="Minimize"
-                hint="Tick to minimize the generated project, leaves only build files and minimum amounts of source code"
+                label="Minimal mod"
+                hint="Tick to minimize the amount of code in the generated project, only keeping the parts that are considered most necessary"
                 persistent-hint
             />
           </v-expansion-panel-text>
