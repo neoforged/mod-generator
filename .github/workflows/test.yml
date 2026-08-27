@@ -38,6 +38,7 @@ jobs:
           --gradle-plugin ${{ matrix.gradle-plugin }}
           --package-name net.neoforged.testmod
           --output-folder out
+          --minimal
       - name: Make Gradle wrapper executable
         working-directory: ./out
         run: chmod +x gradlew
