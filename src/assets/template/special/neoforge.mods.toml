@@ -133,13 +133,6 @@ displayName="${mod_name}" #mandatory
 {{ /disableComments }}
 #modUrl="https://change.me.to.your.mods.download.example.invalid/" #optional
 
-{{ #from_26_3 }}
-{{ ^disableComments }}
-# An absolute URL where users can support this mod.
-{{ /disableComments }}
-#donationURL="https://change.me.to.your.mods.donation.page.example.invalid/" #optional
-
-{{ /from_26_3 }}
 {{ #before_26_2 }}
 {{ ^disableComments }}
 # The path from the root of the mod JAR to the logo shown in the mod list.
