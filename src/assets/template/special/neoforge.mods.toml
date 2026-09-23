@@ -4,6 +4,7 @@
 # The overall format is standard TOML format, v0.5.0.
 # Note that there are a couple of TOML lists in this file.
 # Find more information on toml format here:  https://github.com/toml-lang/toml
+# Find the full neoforge.mods.toml documentation here: https://docs.neoforged.net/docs/gettingstarted/modfiles/
 {{ /disableComments }}
 
 {{ #before_1_21_5 }}
@@ -18,17 +19,73 @@ modLoader="javafml" #mandatory
 loaderVersion="${loader_version_range}" #mandatory
 
 {{ /before_1_21_5 }}
+{{ #from_1_21_5 }}
+{{ ^minimal }}
 {{ ^disableComments }}
-# The license for you mod. This is mandatory metadata and allows for easier comprehension of your redistributive properties.
+# The language loader used by this mod. The default and recommended value is "javafml" for Java mods.
+{{ #before_1_21_6 }}
+# You can also use "lowcodefml" for data pack or resource pack mods with no Java entrypoint.
+# See https://docs.neoforged.net/docs/1.21.5/gettingstarted/modfiles/#non-mod-specific-properties
+{{ /before_1_21_6 }}
+{{ #from_1_21_6 }}
+# Other values are supplied by third-party language loaders.
+# See https://docs.neoforged.net/docs/gettingstarted/modfiles/#non-mod-specific-properties
+{{ /from_1_21_6 }}
+{{ /disableComments }}
+#modLoader="javafml" #optional
+
+{{ ^disableComments }}
+# The acceptable language loader versions, expressed as a Maven version range. An empty string allows any version.
+# The current "javafml"{{ #before_1_21_6 }} and "lowcodefml" loaders are{{ /before_1_21_6 }}{{ #from_1_21_6 }} loader is{{ /from_1_21_6 }} version 1.
+# See https://maven.apache.org/enforcer/enforcer-rules/versionRanges.html
+{{ /disableComments }}
+#loaderVersion="[1,)" #optional
+
+{{ /minimal }}
+{{ /from_1_21_5 }}
+{{ ^disableComments }}
+# The license for your mod. This is mandatory metadata and allows for easier comprehension of your redistributive properties.
 # Review your options at https://choosealicense.com/. All rights reserved is the default copyright stance, and is thus the default here.
 {{ /disableComments }}
 license="${mod_license}"
 {{ ^minimal }}
 
+{{ #from_26_2 }}
+{{ ^disableComments }}
+# An absolute URL for the license text shown in the mod list
+{{ /disableComments }}
+#licenseURL="https://change.me.to.your.license.example.invalid/" #optional
+{{ /from_26_2 }}
+
 {{ ^disableComments }}
 # A URL to refer people to when problems occur with this mod
 {{ /disableComments }}
 #issueTrackerURL="https://change.me.to.your.issue.tracker.example.invalid/" #optional
+
+{{ ^disableComments }}
+# Whether the mod's resources should be shown as a separate resource pack.
+# true shows them separately in the Resource Packs menu; false uses the combined "Mod Resources" pack (default).
+{{ /disableComments }}
+#showAsResourcePack=false #optional
+
+{{ ^disableComments }}
+# Whether the mod's data should be shown as a separate data pack.
+# true shows it separately in the Data Packs menu; false uses the combined "Mod Data" pack (default).
+{{ /disableComments }}
+#showAsDataPack=false #optional
+
+{{ ^disableComments }}
+# A list of fully-qualified service interface names used by the mod's Java module.
+# This is equivalent to the Java module system's "uses" directive.
+# See https://docs.neoforged.net/docs/gettingstarted/modfiles/#non-mod-specific-properties
+{{ /disableComments }}
+#services=["{{ package_name }}.ExampleService"] #optional
+
+{{ ^disableComments }}
+# File-wide key-value substitution properties. Reference a value elsewhere as ${file.<key>}.
+# Values may be any valid TOML value. See https://docs.neoforged.net/docs/gettingstarted/modfiles/#non-mod-specific-properties
+{{ /disableComments }}
+#properties={exampleProperty="exampleValue"} #optional
 {{ /minimal}}
 
 {{ ^disableComments }}
@@ -40,6 +97,15 @@ license="${mod_license}"
 # The modid of the mod
 {{ /disableComments }}
 modId="${mod_id}" #mandatory
+
+{{ ^minimal }}
+{{ ^disableComments }}
+# An override namespace for the mod. The default is the mod id, and this field is currently unused.
+# The value follows mod-id rules but may also contain dots and dashes.
+# See https://docs.neoforged.net/docs/gettingstarted/modfiles/#mod-specific-properties
+{{ /disableComments }}
+#namespace="${mod_id}" #optional
+{{ /minimal }}
 
 {{ ^disableComments }}
 # The version number of the mod
@@ -63,14 +129,66 @@ displayName="${mod_name}" #mandatory
 #displayURL="https://change.me.to.your.mods.homepage.example.invalid/" #optional
 
 {{ ^disableComments }}
-# A file name (in the root of the mod JAR) containing a logo for display
+# An absolute URL for the download page of this mod. This field is currently unused.
+{{ /disableComments }}
+#modUrl="https://change.me.to.your.mods.download.example.invalid/" #optional
+
+{{ #from_26_3 }}
+{{ ^disableComments }}
+# An absolute URL where users can support this mod.
+{{ /disableComments }}
+#donationURL="https://change.me.to.your.mods.donation.page.example.invalid/" #optional
+
+{{ /from_26_3 }}
+{{ #before_26_2 }}
+{{ ^disableComments }}
+# The path from the root of the mod JAR to the logo shown in the mod list.
+# Valid path characters are lowercase letters, digits, slashes, underscores, periods, and hyphens.
 {{ /disableComments }}
 #logoFile="examplemod.png" #optional
+
+{{ ^disableComments }}
+# How to scale the logo: true uses linear filtering for a smooth image; false uses nearest-neighbor filtering.
+{{ /disableComments }}
+#logoBlur=true #optional
+{{ /before_26_2 }}
+{{ #from_26_2 }}
+{{ ^disableComments }}
+# A file name relative to the root of the mod JAR, or a namespaced resource location,
+# for the rectangular banner shown in the mod list.
+{{ /disableComments }}
+#bannerFile="examplemod_banner.png" #optional
+
+{{ ^disableComments }}
+# A file name relative to the root of the mod JAR, or a namespaced resource location,
+# for the square icon shown in the mod list.
+{{ /disableComments }}
+#iconFile="examplemod_icon.png" #optional
+
+{{ ^disableComments }}
+# How to scale the icon: true uses linear filtering for a smooth image; false uses nearest-neighbor filtering.
+{{ /disableComments }}
+#iconBlur=false #optional
+{{ /from_26_2 }}
 
 {{ ^disableComments }}
 # A text field displayed in the mod UI
 {{ /disableComments }}
 #credits="" #optional
+
+{{ ^disableComments }}
+# The path from the root of the mod JAR to a JSON file containing enum extension declarations.
+# See https://docs.neoforged.net/docs/advanced/extensibleenums/
+{{ /disableComments }}
+#enumExtensions="META-INF/enumextensions.json" #optional
+
+{{ #from_1_21_1 }}
+{{ ^disableComments }}
+# The path from the root of the mod JAR to a JSON file containing custom feature flag declarations.
+# See https://docs.neoforged.net/docs/advanced/featureflags/
+{{ /disableComments }}
+#featureFlags="META-INF/feature_flags.json" #optional
+{{ /from_1_21_1 }}
 {{ /minimal }}
 
 {{ ^disableComments }}
@@ -96,10 +214,46 @@ description='''
 {{ #mixins }}
 [[mixins]]
 config="${mod_id}.mixins.json"
+{{ #from_1_21_1 }}
+{{ ^minimal }}
+{{ ^disableComments }}
+# A list of mod ids that must be loaded for this mixin configuration to be applied. The default is an empty list.
+{{ /disableComments }}
+#requiredMods=["anothermod"] #optional
+{{ /minimal }}
+{{ /from_1_21_1 }}
+{{ #from_1_21_7 }}
+{{ ^minimal }}
+{{ ^disableComments }}
+# The Fabric Mixin version whose behavior this configuration expects. Omit it to use NeoForge's default behavior version.
+# The value must be between NeoForge's default behavior version and its bundled Mixin version.
+# See https://docs.neoforged.net/docs/gettingstarted/modfiles/#mixin-configuration-properties
+{{ /disableComments }}
+#behaviorVersion="0.17.1" #optional
+{{ /minimal }}
+{{ /from_1_21_7 }}
 {{ /mixins }}
 {{ ^mixins }}
 #[[mixins]]
 #config="${mod_id}.mixins.json"
+{{ #from_1_21_1 }}
+{{ ^minimal }}
+{{ ^disableComments }}
+# A list of mod ids that must be loaded for this mixin configuration to be applied. The default is an empty list.
+{{ /disableComments }}
+#requiredMods=["anothermod"] #optional
+{{ /minimal }}
+{{ /from_1_21_1 }}
+{{ #from_1_21_7 }}
+{{ ^minimal }}
+{{ ^disableComments }}
+# The Fabric Mixin version whose behavior this configuration expects. Omit it to use NeoForge's default behavior version.
+# The value must be between NeoForge's default behavior version and its bundled Mixin version.
+# See https://docs.neoforged.net/docs/gettingstarted/modfiles/#mixin-configuration-properties
+{{ /disableComments }}
+#behaviorVersion="0.17.1" #optional
+{{ /minimal }}
+{{ /from_1_21_7 }}
 {{ /mixins }}
 
 {{ ^disableComments }}
@@ -139,6 +293,12 @@ config="${mod_id}.mixins.json"
     # Side this dependency is applied on - BOTH, CLIENT, or SERVER
 {{ /disableComments }}
     side="BOTH"
+{{ ^minimal }}
+{{ ^disableComments }}
+    # An absolute URL for the dependency's download page. This field is currently unused.
+{{ /disableComments }}
+    #referralUrl="https://library.example.invalid/" #optional
+{{ /minimal }}
 
 {{ ^disableComments }}
 # Here's another dependency
@@ -155,10 +315,29 @@ config="${mod_id}.mixins.json"
 {{ ^minimal }}
 
 {{ ^disableComments }}
-# Features are specific properties of the game environment, that you may want to declare you require. This example declares
-# that your mod requires GL version 3.2 or higher. Other features will be added. They are side aware so declaring this won't
-# stop your mod loading on the server for example.
+# Features are specific properties of the game environment that your mod may require. Values are Maven version ranges.
+{{ #before_1_21_5 }}
+# This example requires OpenGL 3.2 or newer. Supported keys are javaVersion and openGLVersion.
+# See https://docs.neoforged.net/docs/1.21.4/gettingstarted/modfiles/#features
+{{ /before_1_21_5 }}
+{{ #from_1_21_5 }}
+# This example requires Java {{ java_version }} or newer. The supported key is javaVersion.
+# See https://docs.neoforged.net/docs/gettingstarted/modfiles/#features
+{{ /from_1_21_5 }}
 {{ /disableComments }}
 #[features.${mod_id}]
+{{ #before_1_21_5 }}
 #openGLVersion="[3.2,)"
+{{ /before_1_21_5 }}
+{{ #from_1_21_5 }}
+#javaVersion="[{{ java_version }},)"
+{{ /from_1_21_5 }}
+
+{{ ^disableComments }}
+# Arbitrary mod-specific key-value properties. Values may be any valid TOML value.
+# Read them through IModInfo#getModProperties.
+# See https://docs.neoforged.net/docs/gettingstarted/modfiles/#mod-properties
+{{ /disableComments }}
+#[modproperties.${mod_id}]
+#exampleProperty="exampleValue"
 {{ /minimal }}

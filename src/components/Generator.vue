@@ -225,7 +225,7 @@ const submit = async (generator: () => Promise<any>) => {
             <v-text-field
                 v-model="state.modAuthors"
                 label="Mod Authors"
-                hint="The authors of your mod"
+                hint="The authors of your mod. Separate multiple authors with commas."
                 persistent-hint
                 variant="outlined"
             />
