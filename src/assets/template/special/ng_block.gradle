@@ -5,6 +5,17 @@
 // Default run configurations.
 // These can be tweaked, removed, or duplicated as needed.
 {{ /disableComments }}
+{{ #before_1_20_5 }}
+{{ ^disableComments }}
+// JST requires Java 21 to transform sources, while this mod targets Java 17.
+{{ /disableComments }}
+tasks.withType(net.neoforged.gradle.common.runtime.tasks.JavaSourceTransformer).configureEach {
+    javaLauncher = javaToolchains.launcherFor {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+{{ /before_1_20_5 }}
 runs {
     {{ ^disableComments }}
     // applies to all the run configs below
