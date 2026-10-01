@@ -82,7 +82,7 @@ license="${mod_license}"
 #services=["{{ package_name }}.ExampleService"] #optional
 
 {{ ^disableComments }}
-# File-wide key-value substitution properties. Reference a value elsewhere as ${file.<key>}.
+# File-wide key-value substitution properties. Use a dollar sign followed by {file.<key>} to reference a value.
 # Values may be any valid TOML value. See https://docs.neoforged.net/docs/gettingstarted/modfiles/#non-mod-specific-properties
 {{ /disableComments }}
 #properties={exampleProperty="exampleValue"} #optional
