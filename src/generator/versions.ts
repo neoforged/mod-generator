@@ -128,11 +128,15 @@ async function fetchParchmentVersions(
     if (!foundMcVersion) {
       continue;
     }
-    const req = await fetch(
-      `https://maven.neoforged.net/releases/org/parchmentmc/data/parchment-${candidateVersion}/maven-metadata.xml`,
-    );
-    if (!req.ok) {
+    const url = `https://maven.neoforged.net/releases/org/parchmentmc/data/parchment-${candidateVersion}/maven-metadata.xml`;
+    const req = await fetchWithRetry(url);
+    if (req.status === 404) {
       continue; // MC version might not have parchment data yet.
+    }
+    if (!req.ok) {
+      throw new Error(
+        `Failed to fetch Parchment metadata: ${url} (HTTP ${req.status})`,
+      );
     }
     const xmlDocument = xmlParser().parseFromString(
       await req.text(),
@@ -155,4 +159,22 @@ async function fetchParchmentVersions(
   throw new Error(
     `Failed to find Parchment version for Minecraft ${mcVersion} or older.`,
   );
+}
+
+async function fetchWithRetry(url: string): Promise<Response> {
+  for (let attempt = 0; ; attempt++) {
+    try {
+      const response = await fetch(url);
+      const retryable = response.status === 429 || response.status >= 500;
+      if (!retryable || attempt === 2) {
+        return response;
+      }
+      await response.body?.cancel();
+    } catch (error) {
+      if (attempt === 2) {
+        throw error;
+      }
+    }
+    await new Promise((resolve) => setTimeout(resolve, 1000 * (attempt + 1)));
+  }
 }
