@@ -128,28 +128,41 @@ async function fetchParchmentVersions(
     if (!foundMcVersion) {
       continue;
     }
-    const req = await fetch(
-      `https://maven.neoforged.net/releases/org/parchmentmc/data/parchment-${candidateVersion}/maven-metadata.xml`,
-    );
-    if (!req.ok) {
-      continue; // MC version might not have parchment data yet.
-    }
-    const xmlDocument = xmlParser().parseFromString(
-      await req.text(),
-      "text/xml",
-    );
-    const release = xmlDocument
-      .getElementsByTagName("metadata")[0]
-      .getElementsByTagName("versioning")[0]
-      .getElementsByTagName("release");
-    if (release.length === 1) {
-      if (!release[0].textContent) {
-        throw new Error("Unexpected null text content for node " + release[0]);
+    // Truncate patch versions for 2026+ schemes (e.g., 26.1.2 -> 26.1)
+    const versionParts = candidateVersion.split(".");
+    const parchmentVersion =
+      versionParts.length === 3 && versionParts[0] !== "1"
+        ? versionParts.slice(0, 2).join(".")
+        : candidateVersion;
+
+    try {
+      const req = await fetch(
+        `https://maven.neoforged.net/releases/org/parchmentmc/data/parchment-${parchmentVersion}/maven-metadata.xml`,
+      );
+      if (!req.ok) {
+        continue; // MC version might not have parchment data yet.
       }
-      return {
-        parchmentMinecraftVersion: candidateVersion,
-        parchmentMappingsVersion: release[0].textContent,
-      };
+      const xmlDocument = xmlParser().parseFromString(
+        await req.text(),
+        "text/xml",
+      );
+      const release = xmlDocument
+        .getElementsByTagName("metadata")[0]
+        .getElementsByTagName("versioning")[0]
+        .getElementsByTagName("release");
+      if (release.length === 1) {
+        if (!release[0].textContent) {
+          throw new Error(
+            "Unexpected null text content for node " + release[0],
+          );
+        }
+        return {
+          parchmentMinecraftVersion: candidateVersion,
+          parchmentMappingsVersion: release[0].textContent,
+        };
+      }
+    } catch (error) {
+      continue;
     }
   }
   throw new Error(
