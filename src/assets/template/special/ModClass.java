@@ -166,12 +166,7 @@ public class {{ mod_class_name }} {
 {{ ^disableComments }}
         // Register our mod's ModConfigSpec so that FML can create and load the config file for us
 {{ /disableComments }}
-{{ #before_1_20_5 }}
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
-{{ /before_1_20_5 }}
-{{ #from_1_20_5 }}
-        modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
-{{ /from_1_20_5 }}
+        {{ #before_1_20_5 }}ModLoadingContext.get(){{ /before_1_20_5 }}{{ #from_1_20_5 }}modContainer{{ /from_1_20_5 }}.registerConfig(ModConfig.Type.{{ #before_26_3 }}COMMON{{ /before_26_3 }}{{ #from_26_3 }}LOCAL{{ /from_26_3 }}, Config.SPEC);
 {{ /minimal }}
     }
 {{ ^minimal }}
