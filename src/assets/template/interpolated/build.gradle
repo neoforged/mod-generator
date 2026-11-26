@@ -36,7 +36,7 @@ sourceSets.main.resources {
     {{ ^minimal }}
     exclude("**/*.bbmodel"){{ ^disableComments }} // BlockBench project files{{ /disableComments }}
     {{ /minimal }}
-    exclude("src/generated/**/.cache"){{ ^disableComments }} // datagen cache files{{ /disableComments }}
+    exclude("**/.cache/**"){{ ^disableComments }} // datagen cache files{{ /disableComments }}
 }
 
 repositories {
@@ -171,7 +171,7 @@ publishing {
     }
     repositories {
         maven {
-            url "file://${project.projectDir}/repo"
+            url = uri("repo")
         }
     }
 }
